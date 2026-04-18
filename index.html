@@ -4637,11 +4637,14 @@
             serverData.forEach(item => {
               const target = DATA.entries.find(e => e.row === item.row);
               if (target) {
-                if (typeof item.content === 'string' && target.content !== item.content) {
+                // ⚠️ 只有「可編輯」卡片的內容才從雲端覆蓋；
+                // 固定腳本（editable:false，如主推官台詞）永遠以 index.html 為準，
+                // 避免雲端空欄位洗掉本地預設內容。
+                if (target.editable && typeof item.content === 'string' && target.content !== item.content) {
                   target.content = item.content;
                   hasUpdate = true;
                 }
-                // 結構欄位（order / deleted）若雲端有值，覆蓋本地
+                // 結構欄位（order / deleted）若雲端有值，覆蓋本地（所有卡片皆適用）
                 if (typeof item.order === 'number' && target.order !== item.order) {
                   target.order = item.order;
                   hasUpdate = true;
@@ -4651,7 +4654,7 @@
                   hasUpdate = true;
                 }
                 // 如果雲端資料已經和本地存檔不同，清除本地與其衝突的暫存，避免標籤錯亂
-                if (typeof item.content === 'string' && edits[item.row] !== undefined && edits[item.row] !== item.content) {
+                if (target.editable && typeof item.content === 'string' && edits[item.row] !== undefined && edits[item.row] !== item.content) {
                   delete edits[item.row];
                   hasUpdate = true;
                 }
