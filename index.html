@@ -1262,8 +1262,132 @@
       .header h1 { font-size: 14px; }
       .header { padding: 12px 16px; }
     }
+
+    /* ═══════════════════════════════
+       ADMIN MODE (?admin=1)
+    ═══════════════════════════════ */
+    .admin-banner {
+      display: none;
+      background: linear-gradient(135deg, #7c2d12, #9a3412);
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .admin-banner .ab-left { display: flex; align-items: center; gap: 10px; }
+    .admin-banner .ab-actions { display: flex; gap: 8px; }
+    .admin-banner button {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .admin-banner button:hover { background: rgba(255,255,255,0.28); }
+    .admin-banner button.active { background: #fff; color: #7c2d12; font-weight: 700; }
+    body:not(.admin) .admin-banner { display: none !important; }
+
+    /* Drag handle — only visible in admin mode */
+    .card .drag-handle {
+      display: none;
+      position: absolute;
+      left: 6px;
+      top: 8px;
+      width: 26px;
+      height: 34px;
+      background: linear-gradient(135deg, #ea580c, #c2410c);
+      color: #fff;
+      border-radius: 5px;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      font-size: 16px;
+      font-weight: bold;
+      user-select: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      z-index: 10;
+    }
+    .card .drag-handle:hover { background: linear-gradient(135deg, #c2410c, #9a3412); }
+    .card .drag-handle:active { cursor: grabbing; }
+    body.admin .card { position: relative; padding-left: 44px; }
+    body.admin .card .drag-handle { display: flex; }
+
+    /* Delete / restore buttons — only visible in admin mode */
+    .card .admin-actions { display: none; }
+    body.admin .card .admin-actions {
+      display: inline-flex;
+      gap: 6px;
+      margin-left: auto;
+      align-items: center;
+    }
+    .card .admin-actions button {
+      background: #fff;
+      border: 1px solid #e7e5e4;
+      border-radius: 4px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      color: #57534e;
+      transition: all 0.15s ease;
+    }
+    .card .admin-actions .btn-del:hover { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+    .card .admin-actions .btn-restore { background: #ecfdf5; border-color: #86efac; color: #166534; }
+    .card .admin-actions .btn-restore:hover { background: #d1fae5; }
+
+    /* Deleted card styling */
+    .card.is-deleted {
+      opacity: 0.5;
+      background: #f5f5f4;
+      position: relative;
+    }
+    .card.is-deleted::before {
+      content: "已刪除";
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: #dc2626;
+      color: #fff;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      z-index: 5;
+    }
+    .card.is-deleted .card-body,
+    .card.is-deleted .card-header .badge:not(.edited-tag) { text-decoration: line-through; }
+
+    /* SortableJS feedback */
+    .sortable-ghost { opacity: 0.3; background: #fef3c7 !important; }
+    .sortable-chosen { box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    .sortable-drag { opacity: 0.9; }
+
+    /* Structural sync badge */
+    #structSyncBadge {
+      display: none;
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 500;
+      background: rgba(234, 88, 12, 0.9);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 14px;
+      font-size: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
 </head>
 
 <body>
@@ -1288,6 +1412,19 @@
         </div>
         <div class="header-sync" id="headerSyncBadge"></div>
       </div>
+
+      <div class="admin-banner" id="adminBanner">
+        <div class="ab-left">
+          <span>🛠️ 管理模式</span>
+          <span style="font-size:12px;opacity:0.85;">可拖拉卡片調整順序、刪除不需要的區塊</span>
+        </div>
+        <div class="ab-actions">
+          <button id="toggleShowDeleted">顯示已刪除</button>
+          <button id="adminExit">離開管理模式</button>
+        </div>
+      </div>
+
+      <div id="structSyncBadge">🔄 結構同步中...</div>
 
       <div id="scenarioWrapper"></div>
 
@@ -1812,6 +1949,72 @@
           "isIntro": false
         },
         {
+          "row": 200,
+          "phase": 2,
+          "id": "2.37a",
+          "event": "指派說明",
+          "dept": "環境部(主推官)",
+          "content": "請行政院公共工程委員會說明今日實施之調適行動措施規劃",
+          "editable": false,
+          "fill": "blue",
+          "isIntro": false
+        },
+        {
+          "row": 201,
+          "phase": 2,
+          "id": "2.37b",
+          "event": "行動規劃",
+          "dept": "行政院公共工程委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 202,
+          "phase": 2,
+          "id": "2.37c",
+          "event": "指派說明",
+          "dept": "環境部(主推官)",
+          "content": "請國家通訊傳播委員會說明今日實施之調適行動措施規劃",
+          "editable": false,
+          "fill": "blue",
+          "isIntro": false
+        },
+        {
+          "row": 203,
+          "phase": 2,
+          "id": "2.37d",
+          "event": "行動規劃",
+          "dept": "國家通訊傳播委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 204,
+          "phase": 2,
+          "id": "2.37e",
+          "event": "指派說明",
+          "dept": "環境部(主推官)",
+          "content": "請交通部觀光署說明今日實施之調適行動措施規劃",
+          "editable": false,
+          "fill": "blue",
+          "isIntro": false
+        },
+        {
+          "row": 205,
+          "phase": 2,
+          "id": "2.37f",
+          "event": "行動規劃",
+          "dept": "交通部觀光署",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
           "row": 46,
           "phase": 2,
           "id": "2.38",
@@ -2197,6 +2400,39 @@
           "isIntro": false
         },
         {
+          "row": 210,
+          "phase": 3,
+          "id": "3.28a",
+          "event": "成果回報",
+          "dept": "行政院公共工程委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 211,
+          "phase": 3,
+          "id": "3.28b",
+          "event": "成果回報",
+          "dept": "國家通訊傳播委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 212,
+          "phase": 3,
+          "id": "3.28c",
+          "event": "成果回報",
+          "dept": "交通部觀光署",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
           "row": 82,
           "phase": 3,
           "id": "3.29",
@@ -2555,6 +2791,39 @@
           "event": "成果回報",
           "dept": "原民會",
           "content": "原民會說明：\n本會將協調地方原民區公所，傳達高溫資訊並確認部落長者或弱勢家庭的需求，確保偏遠地區不被遺漏。",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 220,
+          "phase": 4,
+          "id": "4.28a",
+          "event": "成果回報",
+          "dept": "行政院公共工程委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 221,
+          "phase": 4,
+          "id": "4.28b",
+          "event": "成果回報",
+          "dept": "國家通訊傳播委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 222,
+          "phase": 4,
+          "id": "4.28c",
+          "event": "成果回報",
+          "dept": "交通部觀光署",
+          "content": "（待單位填寫）",
           "editable": true,
           "fill": "yellow",
           "isIntro": false
@@ -2934,6 +3203,39 @@
           "isIntro": false
         },
         {
+          "row": 230,
+          "phase": 5,
+          "id": "5.29a",
+          "event": "行動成果",
+          "dept": "行政院公共工程委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 231,
+          "phase": 5,
+          "id": "5.29b",
+          "event": "行動成果",
+          "dept": "國家通訊傳播委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 232,
+          "phase": 5,
+          "id": "5.29c",
+          "event": "行動成果",
+          "dept": "交通部觀光署",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
           "row": 151,
           "phase": 5,
           "id": "5.30",
@@ -2945,17 +3247,6 @@
           "isIntro": false
         },
         {
-          "row": 152,
-          "phase": 5,
-          "id": "5.31",
-          "event": "指派說明",
-          "dept": "環境部(主推官)",
-          "content": "請臺北市政府說明高溫調適行動措施與成果",
-          "editable": false,
-          "fill": "blue",
-          "isIntro": false
-        },
-        {
           "row": 153,
           "phase": 5,
           "id": "5.32",
@@ -2964,17 +3255,6 @@
           "content": "環保局道路高溫灑水出動16人次、8車次，灑水量165噸、里程數70.5公里；河川沿岸轄區巡檢無死魚情事。\n衛生局通知十二區健康服務中心加強收案社區個案管理之老人或獨居長者高溫時健康維護事宜，輔導22處食品業者，衛生局緊急及災難調適行動指揮中心（EMOC）接獲醫院通報因熱傷患就醫之病患100人。\n社會局通報各單位啟動執行高溫關懷，總計關懷6,669人次。\n勞動局檢查夏季戶外高氣溫作業勞動共計5處。\n教育局通知本市高級中等以下學校、幼兒園業務承辦人配合因應，有特殊情形會進行校安通報。\n公園處進行公園綠地澆灌，用水量335.75噸、澆灌面積91,140平方公尺。\n市場處食品安全宣導共計137處。\n消防局救護通報1件，共計0人送醫。\n水利處通知淡水河、基隆河「河面漂流物撈除工作」承商整備撈除量能。\n衛工處北市截流站正常開啟截流，持續監測迪化污水處理廠及內湖污水處理廠污水處理放流水質。",
           "editable": true,
           "fill": "yellow",
-          "isIntro": false
-        },
-        {
-          "row": 154,
-          "phase": 5,
-          "id": "5.33",
-          "event": "指派說明",
-          "dept": "環境部(主推官)",
-          "content": "請桃園市政府說明高溫調適行動措施與成果",
-          "editable": false,
-          "fill": "blue",
           "isIntro": false
         },
         {
@@ -3169,7 +3449,7 @@
           "phase": 6,
           "id": "6.15",
           "event": "行動規劃",
-          "dept": "經濟部",
+          "dept": "經濟部產發署",
           "content": "1.評估高溫對不同產業的影響，制定差異化調適策略。\n2.支援企業應用節能降溫技術與措施。\n3.建立產業高溫風險評估與預警系統。\n4.加強對中小企業的高溫調適支援。\n5.鼓勵產業進行技術創新，開發適應高溫環境的新產品和新服務。",
           "editable": true,
           "fill": "yellow",
@@ -3202,7 +3482,7 @@
           "phase": 6,
           "id": "6.18",
           "event": "行動規劃",
-          "dept": "內政部",
+          "dept": "內政部國土署",
           "content": "1.推動城市綠化與透水鋪面，減緩熱島效應。\n2.推廣綠建築標章及相關協助作業。\n3.推動校園綠建築設計，減低環境負荷與降低室內溫度。",
           "editable": true,
           "fill": "yellow",
@@ -3259,6 +3539,39 @@
           "event": "行動規劃",
           "dept": "海委會",
           "content": "1.持續監測珊瑚白化狀況，包括參考美國NOAA珊瑚監測網預警資訊，規劃珊瑚保育及因應措施。\n2.進行海域生態監測，關注海溫及生物多樣性是否因氣候變遷而變化。",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 240,
+          "phase": 6,
+          "id": "6.23a",
+          "event": "行動規劃",
+          "dept": "行政院公共工程委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 241,
+          "phase": 6,
+          "id": "6.23b",
+          "event": "行動規劃",
+          "dept": "國家通訊傳播委員會",
+          "content": "（待單位填寫）",
+          "editable": true,
+          "fill": "yellow",
+          "isIntro": false
+        },
+        {
+          "row": 242,
+          "phase": 6,
+          "id": "6.23c",
+          "event": "行動規劃",
+          "dept": "交通部觀光署",
+          "content": "（待單位填寫）",
           "editable": true,
           "fill": "yellow",
           "isIntro": false
@@ -3477,8 +3790,72 @@
     let edits = {};
     let resets = new Set();
     let selectedDepts = new Set();
+    let isAdmin = new URLSearchParams(location.search).get('admin') === '1';
+    let showDeleted = false;
+    let sortableInstance = null;
+    let structUploadTimer = null;
     try { edits = JSON.parse(localStorage.getItem('heatDrillEdits3') || '{}'); } catch (e) { }
     function persistEdits() { localStorage.setItem('heatDrillEdits3', JSON.stringify(edits)); }
+
+    /* ─── 自動初始化 order / deleted（所有裝置結果一致） ─── */
+    function initStructureFields() {
+      const byPhase = {};
+      DATA.entries.forEach(e => {
+        if (typeof e.deleted === 'undefined') e.deleted = false;
+        if (!byPhase[e.phase]) byPhase[e.phase] = [];
+        byPhase[e.phase].push(e);
+      });
+      Object.keys(byPhase).forEach(p => {
+        byPhase[p].forEach((e, idx) => {
+          if (typeof e.order !== 'number') e.order = (idx + 1) * 10;
+        });
+      });
+    }
+    initStructureFields();
+
+    /* ─── 結構變更 debounce 上傳（策略 C） ─── */
+    function scheduleStructuralUpload(immediate) {
+      if (structUploadTimer) { clearTimeout(structUploadTimer); structUploadTimer = null; }
+      const run = () => uploadStructural();
+      if (immediate) run(); else structUploadTimer = setTimeout(run, 1000);
+    }
+
+    function uploadStructural() {
+      if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.includes('###')) return;
+      const payload = DATA.entries.map(e => ({
+        row: e.row,
+        order: e.order,
+        deleted: !!e.deleted,
+        structural: true
+      }));
+      const badge = document.getElementById('structSyncBadge');
+      if (badge) { badge.style.display = 'block'; badge.innerHTML = '🔄 結構同步中...'; badge.style.background = 'rgba(234,88,12,0.9)'; }
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'saveStructure', items: payload })
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (badge) {
+            if (result && result.status === 'success') {
+              badge.innerHTML = '✅ 結構已同步';
+              badge.style.background = 'rgba(22,163,74,0.9)';
+            } else {
+              badge.innerHTML = '⚠️ 同步失敗';
+              badge.style.background = 'rgba(220,38,38,0.9)';
+            }
+            setTimeout(() => { badge.style.display = 'none'; }, 2500);
+          }
+        })
+        .catch(() => {
+          if (badge) {
+            badge.innerHTML = '⚠️ 同步時發生錯誤';
+            badge.style.background = 'rgba(220,38,38,0.9)';
+            setTimeout(() => { badge.style.display = 'none'; }, 2500);
+          }
+        });
+    }
 
     function getDeptClass(dept) {
       if (dept.includes('環境部')) return 'dept-env';
@@ -3872,6 +4249,10 @@
       const editableOnly = document.getElementById('editableOnly').checked;
 
       let entries = DATA.entries.filter(e => e.phase === activePhase && !e.isIntro);
+      // 依 order 排序
+      entries = entries.slice().sort((a, b) => (a.order || 0) - (b.order || 0));
+      // 過濾已刪除（admin 模式下若切換為「顯示已刪除」則保留）
+      if (!(isAdmin && showDeleted)) entries = entries.filter(e => !e.deleted);
       if (selectedDepts.size > 0) entries = entries.filter(e => selectedDepts.has(e.dept));
       if (editableOnly) entries = entries.filter(e => e.editable);
 
@@ -3885,15 +4266,17 @@
       entries.forEach(e => {
         const evtFlat = e.event.replace(/\n/g, ' ');
         if (e.dept === '司儀' && evtFlat === '演練階段說明' && !e.isIntro) {
-          html += `<div class="section-divider">${escHtml(e.content)}</div>`;
+          html += `<div class="section-divider" data-row="${e.row}">${escHtml(e.content)}</div>`;
           return;
         }
         const fillClass = e.editable ? 'yellow' : (e.fill === 'green' ? 'green' : 'blue');
         const bgClass = e.editable ? 'bg-yellow' : (e.fill === 'green' ? 'bg-green' : 'bg-blue');
         const currentContent = edits[e.row] !== undefined ? edits[e.row] : e.content;
         const isEdited = edits[e.row] !== undefined && edits[e.row] !== e.content;
+        const deletedClass = e.deleted ? ' is-deleted' : '';
 
-        html += `<div class="card ${fillClass}">`;
+        html += `<div class="card ${fillClass}${deletedClass}" data-row="${e.row}">`;
+        html += `<div class="drag-handle" title="拖拉調整順序">⋮⋮</div>`;
         html += `<div class="card-header">`;
         if (e.event) html += `<span class="badge event">${escHtml(evtFlat)}</span>`;
         if (e.dept) html += `<span class="badge ${getDeptClass(e.dept)}">${escHtml(e.dept)}</span>`;
@@ -3903,6 +4286,14 @@
         } else {
           html += `<span class="badge fixed-tag">固定腳本</span>`;
         }
+        // Admin actions
+        html += `<span class="admin-actions">`;
+        if (e.deleted) {
+          html += `<button class="btn-restore" onclick="restoreCard(${e.row})">↩️ 還原</button>`;
+        } else {
+          html += `<button class="btn-del" onclick="deleteCard(${e.row})">🗑️ 刪除</button>`;
+        }
+        html += `</span>`;
         html += `</div>`;
 
         html += `<div class="card-body ${bgClass}">`;
@@ -3924,6 +4315,52 @@
 
       container.innerHTML = html;
       updateStats();
+      bindSortable();
+    }
+
+    /* ─── 拖拉排序（僅 admin 模式） ─── */
+    function bindSortable() {
+      if (!isAdmin) return;
+      if (sortableInstance) { sortableInstance.destroy(); sortableInstance = null; }
+      const container = document.getElementById('content');
+      if (!container) return;
+      sortableInstance = Sortable.create(container, {
+        animation: 150,
+        handle: '.drag-handle',
+        ghostClass: 'sortable-ghost',
+        chosenClass: 'sortable-chosen',
+        dragClass: 'sortable-drag',
+        onEnd: handleDragEnd
+      });
+    }
+
+    function handleDragEnd() {
+      const container = document.getElementById('content');
+      const nodes = Array.from(container.children).filter(el => el.dataset && el.dataset.row);
+      nodes.forEach((el, idx) => {
+        const row = parseInt(el.dataset.row);
+        const entry = DATA.entries.find(e => e.row === row);
+        if (entry) entry.order = (idx + 1) * 10;
+      });
+      scheduleStructuralUpload(false);
+    }
+
+    /* ─── 刪除 / 還原（僅 admin 模式） ─── */
+    function deleteCard(row) {
+      const entry = DATA.entries.find(e => e.row === row);
+      if (!entry) return;
+      if (!confirm('確定要刪除此卡片嗎？（可於管理模式下還原）')) return;
+      entry.deleted = true;
+      render();
+      scheduleStructuralUpload(true);
+    }
+
+    function restoreCard(row) {
+      const entry = DATA.entries.find(e => e.row === row);
+      if (!entry) return;
+      entry.deleted = false;
+      render();
+      scheduleStructuralUpload(true);
     }
 
     function onEdit(textarea) {
@@ -4036,7 +4473,7 @@
         headers: {
           "Content-Type": "text/plain;charset=utf-8"
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({ action: "saveContent", items: payload })
       })
         .then(res => res.json())
         .then(result => {
@@ -4080,7 +4517,10 @@
       const wb = XLSX.utils.book_new();
 
       for (let p = 1; p <= 8; p++) {
-        const phaseEntries = DATA.entries.filter(e => e.phase === p && !e.isIntro);
+        const phaseEntries = DATA.entries
+          .filter(e => e.phase === p && !e.isIntro && !e.deleted)
+          .slice()
+          .sort((a, b) => (a.order || 0) - (b.order || 0));
 
         const wsData = [];
 
@@ -4142,12 +4582,40 @@
       XLSX.writeFile(wb, "40℃高溫即時調適行動演練_總腳本.xlsx");
     }
 
+    /* ─── Admin banner 事件綁定 ─── */
+    function bindAdminBanner() {
+      const banner = document.getElementById('adminBanner');
+      if (!banner) return;
+      banner.style.display = isAdmin ? 'flex' : 'none';
+      if (!isAdmin) return;
+
+      const toggleBtn = document.getElementById('toggleShowDeleted');
+      const exitBtn = document.getElementById('adminExit');
+      if (toggleBtn) {
+        toggleBtn.onclick = () => {
+          showDeleted = !showDeleted;
+          toggleBtn.classList.toggle('active', showDeleted);
+          toggleBtn.textContent = showDeleted ? '✓ 顯示已刪除' : '顯示已刪除';
+          render();
+        };
+      }
+      if (exitBtn) {
+        exitBtn.onclick = () => {
+          const url = new URL(location.href);
+          url.searchParams.delete('admin');
+          location.href = url.toString();
+        };
+      }
+    }
+
     // ★★★ 共通之 Google Apps Script 佈署網址 ★★★
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmmZ0XnMxwU32rkKCZu2t4c7o9FJJCv8wr1ADUfks1EePi95ka7BMEDwX7FDag9oac/exec";
 
     // ★★★ 初始化：向雲端抓取最新資料 ★★★
     function initApp() {
       // 1. 先立即渲染本地已知畫面 (預設腳本 + LocalStorage 暫存)，達成「零等待」開啟
+      if (isAdmin) document.body.classList.add('admin');
+      bindAdminBanner();
       initTabs();
       initDeptFilter();
       render();
@@ -4169,12 +4637,21 @@
             serverData.forEach(item => {
               const target = DATA.entries.find(e => e.row === item.row);
               if (target) {
-                if (target.content !== item.content) {
+                if (typeof item.content === 'string' && target.content !== item.content) {
                   target.content = item.content;
                   hasUpdate = true;
                 }
+                // 結構欄位（order / deleted）若雲端有值，覆蓋本地
+                if (typeof item.order === 'number' && target.order !== item.order) {
+                  target.order = item.order;
+                  hasUpdate = true;
+                }
+                if (typeof item.deleted === 'boolean' && target.deleted !== item.deleted) {
+                  target.deleted = item.deleted;
+                  hasUpdate = true;
+                }
                 // 如果雲端資料已經和本地存檔不同，清除本地與其衝突的暫存，避免標籤錯亂
-                if (edits[item.row] !== undefined && edits[item.row] !== item.content) {
+                if (typeof item.content === 'string' && edits[item.row] !== undefined && edits[item.row] !== item.content) {
                   delete edits[item.row];
                   hasUpdate = true;
                 }
