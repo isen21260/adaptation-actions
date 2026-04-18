@@ -6,7 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>40℃高溫即時調適行動演練 — 腳本協作平台</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap"
+    rel="stylesheet">
   <style>
     :root {
       /* 主要背景 */
@@ -47,9 +49,9 @@
       --card-green-border: #4ADE80;
 
       /* 陰影 */
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
-      --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
-      --shadow-lg: 0 10px 30px rgba(0,0,0,.1), 0 4px 8px rgba(0,0,0,.05);
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, .08), 0 2px 4px rgba(0, 0, 0, .04);
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, .1), 0 4px 8px rgba(0, 0, 0, .05);
 
       /* Legacy compat */
       --shadow: var(--shadow-sm);
@@ -99,8 +101,15 @@
     .tabs::-webkit-scrollbar {
       width: 4px;
     }
-    .tabs::-webkit-scrollbar-track { background: transparent; }
-    .tabs::-webkit-scrollbar-thumb { background: #3F3A37; border-radius: 2px; }
+
+    .tabs::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .tabs::-webkit-scrollbar-thumb {
+      background: #3F3A37;
+      border-radius: 2px;
+    }
 
     /* Sidebar brand header */
     .sidebar-brand {
@@ -108,11 +117,13 @@
       border-bottom: 1px solid var(--sidebar-border);
       flex-shrink: 0;
     }
+
     .sidebar-brand .brand-icon {
       font-size: 28px;
       line-height: 1;
       margin-bottom: 8px;
     }
+
     .sidebar-brand .brand-title {
       font-size: 15px;
       font-weight: 700;
@@ -120,6 +131,7 @@
       line-height: 1.4;
       letter-spacing: 0.3px;
     }
+
     .sidebar-brand .brand-sub {
       font-size: 13px;
       color: var(--sidebar-muted);
@@ -256,7 +268,7 @@
       width: 240px;
       height: 240px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(234,88,12,0.15) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(234, 88, 12, 0.15) 0%, transparent 70%);
     }
 
     .intro-hero::after {
@@ -267,7 +279,7 @@
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(220,38,38,0.1) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
     }
 
     .intro-hero .label {
@@ -407,14 +419,37 @@
     }
 
     /* Phase card top border colors */
-    .pc-col1 { border-top-color: #607d8b; }
-    .pc-col2 { border-top-color: #1976d2; }
-    .pc-col3 { border-top-color: #f57c00; }
-    .pc-col4 { border-top-color: #d84315; }
-    .pc-col5 { border-top-color: #b71c1c; }
-    .pc-col6 { border-top-color: #2e7d32; }
-    .pc-col7 { border-top-color: #6a1b9a; }
-    .pc-col8 { border-top-color: #37474f; }
+    .pc-col1 {
+      border-top-color: #607d8b;
+    }
+
+    .pc-col2 {
+      border-top-color: #1976d2;
+    }
+
+    .pc-col3 {
+      border-top-color: #f57c00;
+    }
+
+    .pc-col4 {
+      border-top-color: #d84315;
+    }
+
+    .pc-col5 {
+      border-top-color: #b71c1c;
+    }
+
+    .pc-col6 {
+      border-top-color: #2e7d32;
+    }
+
+    .pc-col7 {
+      border-top-color: #6a1b9a;
+    }
+
+    .pc-col8 {
+      border-top-color: #37474f;
+    }
 
     .intro-bg-box {
       background: var(--bg-card);
@@ -468,7 +503,7 @@
       width: 180px;
       height: 180px;
       border-radius: 50%;
-      background: rgba(255,255,255,.06);
+      background: rgba(255, 255, 255, .06);
     }
 
     .sh-top::after {
@@ -479,7 +514,7 @@
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: rgba(255,255,255,.04);
+      background: rgba(255, 255, 255, .04);
     }
 
     .sh-badges {
@@ -494,7 +529,7 @@
       font-weight: 700;
       padding: 3px 11px;
       border-radius: 20px;
-      background: rgba(255,255,255,.18);
+      background: rgba(255, 255, 255, .18);
       color: #fff;
       letter-spacing: .5px;
     }
@@ -556,14 +591,37 @@
     }
 
     /* Phase colour themes */
-    .theme-1 .sh-top { background: linear-gradient(135deg, #37474f, #546e7a); }
-    .theme-2 .sh-top { background: linear-gradient(135deg, #0d47a1, #1976d2); }
-    .theme-3 .sh-top { background: linear-gradient(135deg, #e65100, #f57c00); }
-    .theme-4 .sh-top { background: linear-gradient(135deg, #bf360c, #d84315); }
-    .theme-5 .sh-top { background: linear-gradient(135deg, #b71c1c, #c62828); }
-    .theme-6 .sh-top { background: linear-gradient(135deg, #1b5e20, #2e7d32); }
-    .theme-7 .sh-top { background: linear-gradient(135deg, #4a148c, #6a1b9a); }
-    .theme-8 .sh-top { background: linear-gradient(135deg, #263238, #37474f); }
+    .theme-1 .sh-top {
+      background: linear-gradient(135deg, #37474f, #546e7a);
+    }
+
+    .theme-2 .sh-top {
+      background: linear-gradient(135deg, #0d47a1, #1976d2);
+    }
+
+    .theme-3 .sh-top {
+      background: linear-gradient(135deg, #e65100, #f57c00);
+    }
+
+    .theme-4 .sh-top {
+      background: linear-gradient(135deg, #bf360c, #d84315);
+    }
+
+    .theme-5 .sh-top {
+      background: linear-gradient(135deg, #b71c1c, #c62828);
+    }
+
+    .theme-6 .sh-top {
+      background: linear-gradient(135deg, #1b5e20, #2e7d32);
+    }
+
+    .theme-7 .sh-top {
+      background: linear-gradient(135deg, #4a148c, #6a1b9a);
+    }
+
+    .theme-8 .sh-top {
+      background: linear-gradient(135deg, #263238, #37474f);
+    }
 
     /* ═══════════════════════════════
        Filter Bar
@@ -971,20 +1029,17 @@
       position: absolute;
       inset: 0;
       background: linear-gradient(90deg,
-        #BA7517 0%,
-        #D85A30 38%,
-        #E24B4A 68%,
-        #639922 100%
-      );
-      clip-path: polygon(
-        0 32%,
-        calc(100% - 26px) 32%,
-        calc(100% - 26px) 0%,
-        100% 50%,
-        calc(100% - 26px) 100%,
-        calc(100% - 26px) 68%,
-        0 68%
-      );
+          #BA7517 0%,
+          #D85A30 38%,
+          #E24B4A 68%,
+          #639922 100%);
+      clip-path: polygon(0 32%,
+          calc(100% - 26px) 32%,
+          calc(100% - 26px) 0%,
+          100% 50%,
+          calc(100% - 26px) 100%,
+          calc(100% - 26px) 68%,
+          0 68%);
     }
 
     .ht-sev-labels {
@@ -1006,14 +1061,37 @@
       opacity: .8;
     }
 
-    .ht-sl0 span { background: #BA7517; }
-    .ht-sl0 { color: #854F0B; }
-    .ht-sl1 span { background: #D85A30; }
-    .ht-sl1 { color: #993C1D; }
-    .ht-sl2 span { background: #E24B4A; }
-    .ht-sl2 { color: #A32D2D; }
-    .ht-sl3 span { background: #639922; }
-    .ht-sl3 { color: #3B6D11; }
+    .ht-sl0 span {
+      background: #BA7517;
+    }
+
+    .ht-sl0 {
+      color: #854F0B;
+    }
+
+    .ht-sl1 span {
+      background: #D85A30;
+    }
+
+    .ht-sl1 {
+      color: #993C1D;
+    }
+
+    .ht-sl2 span {
+      background: #E24B4A;
+    }
+
+    .ht-sl2 {
+      color: #A32D2D;
+    }
+
+    .ht-sl3 span {
+      background: #639922;
+    }
+
+    .ht-sl3 {
+      color: #3B6D11;
+    }
 
     .ht-grid {
       display: grid;
@@ -1076,25 +1154,73 @@
       color: #3A3530;
     }
 
-    .ht-p0 .ht-phase-head { background: #FAEEDA; }
-    .ht-p0 .ht-phase-day { color: #633806; }
-    .ht-p0 .ht-phase-label { color: #854F0B; }
-    .ht-p0 .ht-phase-temp { background: #FAC775; color: #412402; }
+    .ht-p0 .ht-phase-head {
+      background: #FAEEDA;
+    }
 
-    .ht-p1 .ht-phase-head { background: #FAECE7; }
-    .ht-p1 .ht-phase-day { color: #4A1B0C; }
-    .ht-p1 .ht-phase-label { color: #993C1D; }
-    .ht-p1 .ht-phase-temp { background: #F0997B; color: #4A1B0C; }
+    .ht-p0 .ht-phase-day {
+      color: #633806;
+    }
 
-    .ht-p2 .ht-phase-head { background: #FCEBEB; }
-    .ht-p2 .ht-phase-day { color: #501313; }
-    .ht-p2 .ht-phase-label { color: #A32D2D; }
-    .ht-p2 .ht-phase-temp { background: #F09595; color: #501313; }
+    .ht-p0 .ht-phase-label {
+      color: #854F0B;
+    }
 
-    .ht-p3 .ht-phase-head { background: #EAF3DE; }
-    .ht-p3 .ht-phase-day { color: #173404; }
-    .ht-p3 .ht-phase-label { color: #3B6D11; }
-    .ht-p3 .ht-phase-temp { background: #C0DD97; color: #173404; }
+    .ht-p0 .ht-phase-temp {
+      background: #FAC775;
+      color: #412402;
+    }
+
+    .ht-p1 .ht-phase-head {
+      background: #FAECE7;
+    }
+
+    .ht-p1 .ht-phase-day {
+      color: #4A1B0C;
+    }
+
+    .ht-p1 .ht-phase-label {
+      color: #993C1D;
+    }
+
+    .ht-p1 .ht-phase-temp {
+      background: #F0997B;
+      color: #4A1B0C;
+    }
+
+    .ht-p2 .ht-phase-head {
+      background: #FCEBEB;
+    }
+
+    .ht-p2 .ht-phase-day {
+      color: #501313;
+    }
+
+    .ht-p2 .ht-phase-label {
+      color: #A32D2D;
+    }
+
+    .ht-p2 .ht-phase-temp {
+      background: #F09595;
+      color: #501313;
+    }
+
+    .ht-p3 .ht-phase-head {
+      background: #EAF3DE;
+    }
+
+    .ht-p3 .ht-phase-day {
+      color: #173404;
+    }
+
+    .ht-p3 .ht-phase-label {
+      color: #3B6D11;
+    }
+
+    .ht-p3 .ht-phase-temp {
+      background: #C0DD97;
+      color: #173404;
+    }
 
     .ht-dot {
       display: inline-block;
@@ -1106,17 +1232,49 @@
       flex-shrink: 0;
     }
 
-    .ht-dot-infra    { background: #8C887E; }
-    .ht-dot-health   { background: #C8503A; }
-    .ht-dot-monitor  { background: #2A9E84; }
-    .ht-dot-energy   { background: #B87C10; }
-    .ht-dot-urban    { background: #4E8E28; }
-    .ht-dot-food     { background: #6A9A28; }
-    .ht-dot-eco      { background: #1A9070; }
-    .ht-dot-culture  { background: #C06840; }
-    .ht-dot-water    { background: #3474A8; }
-    .ht-dot-capacity { background: #9A8030; }
-    .ht-dot-recover  { background: #2E6A10; }
+    .ht-dot-infra {
+      background: #8C887E;
+    }
+
+    .ht-dot-health {
+      background: #C8503A;
+    }
+
+    .ht-dot-monitor {
+      background: #2A9E84;
+    }
+
+    .ht-dot-energy {
+      background: #B87C10;
+    }
+
+    .ht-dot-urban {
+      background: #4E8E28;
+    }
+
+    .ht-dot-food {
+      background: #6A9A28;
+    }
+
+    .ht-dot-eco {
+      background: #1A9070;
+    }
+
+    .ht-dot-culture {
+      background: #C06840;
+    }
+
+    .ht-dot-water {
+      background: #3474A8;
+    }
+
+    .ht-dot-capacity {
+      background: #9A8030;
+    }
+
+    .ht-dot-recover {
+      background: #2E6A10;
+    }
 
     .ht-legend {
       display: flex;
@@ -1183,24 +1341,77 @@
       border-bottom: 1px dashed #E2DDD8;
     }
 
-    .ht-m-card-body div:last-child { border-bottom: none; }
+    .ht-m-card-body div:last-child {
+      border-bottom: none;
+    }
 
     /* 統一暖土色系 — 各類別標頭 */
-    .ht-mi .ht-m-card-head  { background: #D0CCBF; color: #2A2820; } /* 維生基礎設施 — 暖石灰 */
-    .ht-mh .ht-m-card-head  { background: #F2C0A8; color: #5A1A0C; } /* 健康        — 珊瑚橘 */
-    .ht-mm .ht-m-card-head  { background: #A8D4C4; color: #0C3830; } /* 高溫監控預警 — 暖青 */
-    .ht-me .ht-m-card-head  { background: #EEC870; color: #3E2400; } /* 能源及產業   — 琥珀金 */
-    .ht-mu .ht-m-card-head  { background: #BBCE98; color: #1E3810; } /* 都市環境改善 — 鼠尾草綠 */
-    .ht-mf .ht-m-card-head  { background: #C0CE88; color: #2A3C0A; } /* 糧食        — 橄欖黃綠 */
-    .ht-mc .ht-m-card-head  { background: #9ECDB8; color: #0A3828; } /* 生態        — 森林青 */
-    .ht-mcu .ht-m-card-head { background: #E8AC88; color: #521C0E; } /* 文化資產     — 赭土橘 */
-    .ht-mw .ht-m-card-head  { background: #A8CCDC; color: #0E2E42; } /* 水資源      — 霧藍（去飽和，不冷） */
-    .ht-mk .ht-m-card-head  { background: #D4BF88; color: #3A2800; } /* 能力建構     — 暖金棕（取代紫色） */
+    .ht-mi .ht-m-card-head {
+      background: #D0CCBF;
+      color: #2A2820;
+    }
+
+    /* 維生基礎設施 — 暖石灰 */
+    .ht-mh .ht-m-card-head {
+      background: #F2C0A8;
+      color: #5A1A0C;
+    }
+
+    /* 健康        — 珊瑚橘 */
+    .ht-mm .ht-m-card-head {
+      background: #A8D4C4;
+      color: #0C3830;
+    }
+
+    /* 高溫監控預警 — 暖青 */
+    .ht-me .ht-m-card-head {
+      background: #EEC870;
+      color: #3E2400;
+    }
+
+    /* 能源及產業   — 琥珀金 */
+    .ht-mu .ht-m-card-head {
+      background: #BBCE98;
+      color: #1E3810;
+    }
+
+    /* 都市環境改善 — 鼠尾草綠 */
+    .ht-mf .ht-m-card-head {
+      background: #C0CE88;
+      color: #2A3C0A;
+    }
+
+    /* 糧食        — 橄欖黃綠 */
+    .ht-mc .ht-m-card-head {
+      background: #9ECDB8;
+      color: #0A3828;
+    }
+
+    /* 生態        — 森林青 */
+    .ht-mcu .ht-m-card-head {
+      background: #E8AC88;
+      color: #521C0E;
+    }
+
+    /* 文化資產     — 赭土橘 */
+    .ht-mw .ht-m-card-head {
+      background: #A8CCDC;
+      color: #0E2E42;
+    }
+
+    /* 水資源      — 霧藍（去飽和，不冷） */
+    .ht-mk .ht-m-card-head {
+      background: #D4BF88;
+      color: #3A2800;
+    }
+
+    /* 能力建構     — 暖金棕（取代紫色） */
 
     /* ═══════════════════════════════
        Responsive
     ═══════════════════════════════ */
     @media (max-width: 1100px) {
+
       /* Sidebar 回到水平 tabs */
       .tabs {
         position: sticky;
@@ -1216,10 +1427,17 @@
         z-index: 99;
         scrollbar-width: none;
       }
-      .tabs::-webkit-scrollbar { display: none; }
+
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+
       .sidebar-brand,
       .sidebar-nav-label,
-      .sidebar-footer { display: none; }
+      .sidebar-footer {
+        display: none;
+      }
+
       .tab {
         flex-direction: column;
         padding: 10px 8px;
@@ -1231,36 +1449,76 @@
         align-items: center;
         text-align: center;
       }
+
       .tab.active {
         border-left: none;
         border-bottom-color: var(--sidebar-active);
-        background: rgba(234,88,12,.08);
+        background: rgba(234, 88, 12, .08);
         color: var(--accent-orange);
       }
-      .tab .day { color: #9CA3AF; }
+
+      .tab .day {
+        color: #9CA3AF;
+      }
+
       .main-wrapper {
         margin-left: 0;
       }
+
       .header {
         top: auto;
       }
+
       .app-shell {
         flex-direction: column;
       }
     }
 
     @media (max-width: 768px) {
-      .intro-phases { grid-template-columns: repeat(2, 1fr); }
-      .intro-hero { padding: 24px 20px; }
-      .intro-hero h2 { font-size: 20px; }
-      .sh-title { font-size: 17px; }
-      .sh-event-list { grid-template-columns: 1fr; }
-      .content { padding: 10px; }
-      .filter-bar { padding: 10px 12px; width: calc(100% - 16px); }
-      .ht-measures-grid { grid-template-columns: repeat(2, 1fr); }
-      .ht-grid { grid-template-columns: repeat(2, 1fr); }
-      .header h1 { font-size: 14px; }
-      .header { padding: 12px 16px; }
+      .intro-phases {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .intro-hero {
+        padding: 24px 20px;
+      }
+
+      .intro-hero h2 {
+        font-size: 20px;
+      }
+
+      .sh-title {
+        font-size: 17px;
+      }
+
+      .sh-event-list {
+        grid-template-columns: 1fr;
+      }
+
+      .content {
+        padding: 10px;
+      }
+
+      .filter-bar {
+        padding: 10px 12px;
+        width: calc(100% - 16px);
+      }
+
+      .ht-measures-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .ht-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .header h1 {
+        font-size: 14px;
+      }
+
+      .header {
+        padding: 12px 16px;
+      }
     }
 
     /* ═══════════════════════════════
@@ -1280,21 +1538,42 @@
       gap: 12px;
       flex-wrap: wrap;
     }
-    .admin-banner .ab-left { display: flex; align-items: center; gap: 10px; }
-    .admin-banner .ab-actions { display: flex; gap: 8px; }
+
+    .admin-banner .ab-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-banner .ab-actions {
+      display: flex;
+      gap: 8px;
+    }
+
     .admin-banner button {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.15);
       color: #fff;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       padding: 6px 12px;
       border-radius: 4px;
       font-size: 13px;
       cursor: pointer;
       transition: background 0.15s ease;
     }
-    .admin-banner button:hover { background: rgba(255,255,255,0.28); }
-    .admin-banner button.active { background: #fff; color: #7c2d12; font-weight: 700; }
-    body:not(.admin) .admin-banner { display: none !important; }
+
+    .admin-banner button:hover {
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .admin-banner button.active {
+      background: #fff;
+      color: #7c2d12;
+      font-weight: 700;
+    }
+
+    body:not(.admin) .admin-banner {
+      display: none !important;
+    }
 
     /* Drag handle — only visible in admin mode */
     .card .drag-handle {
@@ -1313,22 +1592,39 @@
       font-size: 16px;
       font-weight: bold;
       user-select: none;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
       z-index: 10;
     }
-    .card .drag-handle:hover { background: linear-gradient(135deg, #c2410c, #9a3412); }
-    .card .drag-handle:active { cursor: grabbing; }
-    body.admin .card { position: relative; padding-left: 44px; }
-    body.admin .card .drag-handle { display: flex; }
+
+    .card .drag-handle:hover {
+      background: linear-gradient(135deg, #c2410c, #9a3412);
+    }
+
+    .card .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    body.admin .card {
+      position: relative;
+      padding-left: 44px;
+    }
+
+    body.admin .card .drag-handle {
+      display: flex;
+    }
 
     /* Delete / restore buttons — only visible in admin mode */
-    .card .admin-actions { display: none; }
+    .card .admin-actions {
+      display: none;
+    }
+
     body.admin .card .admin-actions {
       display: inline-flex;
       gap: 6px;
       margin-left: auto;
       align-items: center;
     }
+
     .card .admin-actions button {
       background: #fff;
       border: 1px solid #e7e5e4;
@@ -1339,9 +1635,22 @@
       color: #57534e;
       transition: all 0.15s ease;
     }
-    .card .admin-actions .btn-del:hover { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
-    .card .admin-actions .btn-restore { background: #ecfdf5; border-color: #86efac; color: #166534; }
-    .card .admin-actions .btn-restore:hover { background: #d1fae5; }
+
+    .card .admin-actions .btn-del:hover {
+      background: #fee2e2;
+      border-color: #fca5a5;
+      color: #b91c1c;
+    }
+
+    .card .admin-actions .btn-restore {
+      background: #ecfdf5;
+      border-color: #86efac;
+      color: #166534;
+    }
+
+    .card .admin-actions .btn-restore:hover {
+      background: #d1fae5;
+    }
 
     /* Deleted card styling */
     .card.is-deleted {
@@ -1349,6 +1658,7 @@
       background: #f5f5f4;
       position: relative;
     }
+
     .card.is-deleted::before {
       content: "已刪除";
       position: absolute;
@@ -1363,13 +1673,25 @@
       letter-spacing: 0.5px;
       z-index: 5;
     }
+
     .card.is-deleted .card-body,
-    .card.is-deleted .card-header .badge:not(.edited-tag) { text-decoration: line-through; }
+    .card.is-deleted .card-header .badge:not(.edited-tag) {
+      text-decoration: line-through;
+    }
 
     /* SortableJS feedback */
-    .sortable-ghost { opacity: 0.3; background: #fef3c7 !important; }
-    .sortable-chosen { box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
-    .sortable-drag { opacity: 0.9; }
+    .sortable-ghost {
+      opacity: 0.3;
+      background: #fef3c7 !important;
+    }
+
+    .sortable-chosen {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .sortable-drag {
+      opacity: 0.9;
+    }
 
     /* Structural sync badge */
     #structSyncBadge {
@@ -1383,7 +1705,7 @@
       padding: 6px 14px;
       border-radius: 14px;
       font-size: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
@@ -1536,7 +1858,7 @@
           "id": "1.2",
           "event": "高溫預警\nDAY-2、DAY-1",
           "dept": "司儀",
-          "content": "•連續兩日之高溫影響下，氣象署已於昨日發布紅燈預警，於前日發布橙燈預警時，環境部已通知各部會開始針對未來可能出現之持續高溫狀況，進行物資與人員整備，環境部也透過FB粉專、LINE官方帳號、新聞廣告等方式提醒民眾多加利用CoolMap查詢鄰近的涼爽點。\n\n•氣象署持續依氣溫預報資料，於今日(D-1)18:00發布台北市、新北市、桃園市明日為紅燈預警，氣溫有機會達到40℃以上；環境部氣候署根據此預報結果，於高溫調適行動群組通知各部會明日(D0)上午10:00將進行高溫調適行動會議。",
+          "content": "•北台灣地區受到太平洋副熱帶高壓影響，大氣沉降增溫，雲量減少，地面受到更多的太陽輻射，加上由於都市熱島效應與盆地地形蓄熱，使得北部地區出現連日高溫。\n\n•連續兩日之高溫影響下，氣象署於前日(D-2)發布橙燈預警，於今日(D-1)18:00發布台北市、新北市、桃園市明日為紅燈預警，氣溫有機會達到40℃以上；環境部氣候署根據此預報結果，於高溫調適行動群組通知各部會明日(D0)上午10:00將進行高溫調適行動會議。\n\n•用電需求增加，供應五股區、內湖區、蘆竹區工業區之變電所開始出現過載預警。",
           "editable": false,
           "fill": "blue",
           "isIntro": true
@@ -2097,7 +2419,7 @@
           "id": "3.1",
           "event": "演練情境說明",
           "dept": "司儀",
-          "content": "演練階段三、40℃高溫-初步失能徵兆DAY0\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區之基礎維生設施出現初步失能之徵兆：\n\n1.連日高溫造成供應五股區、內湖區、蘆竹區之變電所溫度達到60°C\n\n2.北捷文湖線行經內湖區路段(西湖站至東湖站)軌溫出現60°C\n\n3.用電需求增加，供應五股區、內湖區、蘆竹區之變電所開始出現過載預警\n\n4.五股區、內湖區、蘆竹區部分路段柏油有軟化現象發生，部分路段車輛無法通行。\n\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
+          "content": "演練階段三、40℃高溫-初步失能徵兆DAY0\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區之基礎維生設施出現初步失能之徵兆：\n\n1.因高溫造成台北市發生饋線事故，台北榮總、11日三總汀州院區發生停電。\n\n2.北北桃之敏感脆弱族群(年幼及年長者)發生熱衰竭、熱中暑，尤以測站飆破40度的區域為多，60人以上熱傷害急診病患送醫，有中重症，醫療體系應保持警戒。\n\n3.晚間因高溫持續，用電量持續增加，造成部分地區限電，導致加壓站停擺，進而引發停水。\n\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
           "editable": false,
           "fill": "blue",
           "isIntro": true
@@ -2493,7 +2815,7 @@
           "id": "4.1",
           "event": "演練情境說明",
           "dept": "司儀",
-          "content": "演練階段四、40℃高溫損害累積DAY1\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區開始出現災害事件：\n\n1.發電機組過載，發生區域性停電。進而導致五股區、內湖區、蘆竹區主要幹道路段交通號誌停擺。\n\n2.連日高溫，造成熱能蓄積，導致大氣中的臭氧8小時平均值因光化作用持續升高，達到紅色警示等級(AQI151-200)\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
+          "content": "演練階段四、40℃高溫損害累積DAY1\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區開始出現災害事件：\n\n1.北捷文湖線行經內湖區路段(西湖站至東湖站)因軌溫出現60°C停駛。\n\n2.北北桃之戶外工作者(營造業工人、外送員、軍警消人員)及慢性病患者發生熱衰竭、熱中暑，50人以上熱傷害急診病患送醫。\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
           "editable": false,
           "fill": "blue",
           "isIntro": true
@@ -2889,7 +3211,7 @@
           "id": "5.1",
           "event": "演練情境說明",
           "dept": "司儀",
-          "content": "演練階段五、40℃高溫-災情惡化DAY2\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區之出現災害事件：\n\n1.發電機組過載，發生區域性停電。進而導致文湖線捷運受停電影響停擺，民眾受困於車廂內，需要緊急疏散，部分民眾出現急性熱衰竭的症狀。\n\n2.台北市內湖區、新北市五股區、桃園市蘆竹區之敏感族群(年幼及年長者）、戶外工作者(如營造業勞工、外送人員)發生熱衰竭、熱中暑100人以上熱傷害急診病患送醫，醫療體體系量能過載。\n\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
+          "content": "演練階段五、40℃高溫-災情惡化DAY2\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區之出現災害事件：\n\n1.因連日高溫，導致新北市晚間零星區域出現堆置垃圾悶燒情形。\n\n2.五股區、內湖區、蘆竹區工業區部分路段柏油有軟化現象發生，數輛大卡車駛過後造成路面變形。\n\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
           "editable": false,
           "fill": "blue",
           "isIntro": true
@@ -3296,7 +3618,7 @@
           "id": "6.1",
           "event": "演練情境說明",
           "dept": "司儀",
-          "content": "演練階段六、復原調適DAY3\n溫度下降，高溫突發災害事件解除，各部會針對本次事件進行檢討，納入後續調適對策與方針。",
+          "content": "演練階段六、復原調適DAY3\n隨著氣溫下降，本次連日40°C預警正式解除。各部會隨即針對本次事件展開檢討，重點包含：\n\n一、比對本次實際成災之關鍵區域，與地方氣候變遷調適計畫所列之風險評估區域是否存有落差；\n\n二、檢視調適計畫中各項防範措施之執行成效，並評估後續之精進方向。",
           "editable": false,
           "fill": "blue",
           "isIntro": true
@@ -3307,7 +3629,7 @@
           "id": "6.2",
           "event": "召開會議",
           "dept": "環境部(主推官)",
-          "content": "本次連續3日之高溫40℃事件，造成台北市、新北市、桃園市皆有發生高溫危害事件，統整如下：\nDay0\n1.連日高溫造成供應五股區、內湖區、蘆竹區之變電所溫度達到60°C\n2.北捷文湖線行經內湖區路段(西湖站至東湖站)軌溫出現60°C\n3.用電需求增加，供應五股區、內湖區、蘆竹區之變電所開始出現過載預警\n4.五股區、內湖區、蘆竹區部分路段柏油有軟化現象發生，部分路段車輛無法通行。\nDay1\n1.發電機組過載，發生區域性停電。\n2.五股區、內湖區、蘆竹區主要幹道路段交通號誌停擺。\n3.連日高溫，造成熱能蓄積，導致大氣中的臭氧8小時平均值因光化作用持續升高，達到紅色警示等級(AQI151-200)\nDay2\n1.發電機組過載，發生區域性停電。\n2.文湖線捷運受停電影響停擺，民眾受困於車廂內，需要緊急疏散，部分民眾出現急性熱衰竭的症狀。\n3.台北市內湖區、新北市五股區、桃園市蘆竹區之敏感族群(年幼及年長者）、戶外工作者(如營造業勞工、外送人員)發生熱衰竭、熱中暑)\n4.100人以上熱傷害急診病患送醫，醫療體系量能過載。\n請各部會針對此次事件調適行動措施不足或可改善之處進行報告，並說明後續針對各項事件之調適作為",
+          "content": "本次連續3日之高溫40℃事件，造成台北市、新北市、桃園市皆有發生高溫危害事件，統整如下：\n\nDay0\n1.因高溫造成台北市發生饋線事故，台北榮總、11日三總汀州院區發生停電。\n2.北北桃之敏感脆弱族群(年幼及年長者)發生熱衰竭、熱中暑，尤以測站飆破40度的區域為多，60人以上熱傷害急診病患送醫，有中重症。\n3.晚間因高溫持續，用電量持續增加，造成部分地區限電，導致加壓站停擺，進而引發停水。\n\nDay1\n1.北捷文湖線行經內湖區路段(西湖站至東湖站)因軌溫出現60°C停駛。\n2.北北桃之戶外工作者(營造業工人、外送員、軍警消人員)及慢性病患者發生熱衰竭、熱中暑，50人以上熱傷害急診病患送醫。\n\nDay2\n1.因連日高溫，導致新北市晚間零星區域出現堆置垃圾悶燒情形。\n2.五股區、內湖區、蘆竹區工業區部分路段柏油有軟化現象發生，數輛大卡車駛過後造成路面變形。\n\n請各部會針對此次事件調適行動措施不足或可改善之處進行報告，並說明後續針對各項事件之調適作為。",
           "editable": false,
           "fill": "blue",
           "isIntro": false
@@ -3992,11 +4314,9 @@
           </div>
           <div class="ht-phase-temp">40°C</div>
           <div class="ht-events">
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-energy"></span>用電需求增加，變電所出現<b style="font-weight:500">過載預警</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>北捷文湖線軌溫達 <b style="font-weight:500">60°C</b>（西湖站至東湖站）</div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>變電所溫度達 <b style="font-weight:500">60°C</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-health"></span>敏感族群、戶外工作者出現<b style="font-weight:500">熱衰竭、熱中暑</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>部分路段柏油<b style="font-weight:500">軟化</b>，車輛無法通行</div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-energy"></span>台北市發生<b style="font-weight:500">饋線事故</b>，台北榮總、三總汀州院區停電</div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-health"></span>敏感脆弱族群（年幼／年長者）熱傷害，<b style="font-weight:500">60人以上</b>急診送醫，有中重症</div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-water"></span>晚間限電導致<b style="font-weight:500">加壓站停擺</b>，引發停水</div>
           </div>
         </div>
         <div class="ht-phase ht-p1">
@@ -4006,10 +4326,8 @@
           </div>
           <div class="ht-phase-temp">40°C</div>
           <div class="ht-events">
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-energy"></span>發電機組過載，發生<b style="font-weight:500">區域性跳電</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>主要幹道路段<b style="font-weight:500">交通號誌停擺</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-urban"></span>臭氧因光化作用升高，達<b style="font-weight:500">紅色警示</b>（AQI 151–200）</div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-health"></span>40人以上熱傷害急診送醫，醫療體系<b style="font-weight:500">量能吃緊</b></div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>北捷文湖線軌溫達 <b style="font-weight:500">60°C 停駛</b>（西湖站至東湖站）</div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-health"></span>戶外工作者（營造／外送／軍警消）及慢性病患熱傷害，<b style="font-weight:500">50人以上</b>急診送醫</div>
           </div>
         </div>
         <div class="ht-phase ht-p2">
@@ -4019,11 +4337,8 @@
           </div>
           <div class="ht-phase-temp">40°C</div>
           <div class="ht-events">
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-energy"></span>大範圍<b style="font-weight:500">低頻卸載停電</b>，電網瀕臨崩潰</div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>文湖線因停電<b style="font-weight:500">停擺</b>，420名民眾受困車廂</div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-health"></span><b style="font-weight:500">100人以上</b>熱傷害急診送醫，醫療體系量能<b style="font-weight:500">過載</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-health"></span>部分民眾出現<b style="font-weight:500">急性熱衰竭</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>雙北桃主要幹道<b style="font-weight:500">全面癱瘓</b></div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-urban"></span>新北市晚間零星區域出現<b style="font-weight:500">堆置垃圾悶燒</b></div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-infra"></span>五股、內湖、蘆竹工業區路段<b style="font-weight:500">柏油軟化</b>，大卡車駛過致路面變形</div>
           </div>
         </div>
         <div class="ht-phase ht-p3">
@@ -4033,8 +4348,9 @@
           </div>
           <div class="ht-phase-temp">37°C ↓</div>
           <div class="ht-events">
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-recover"></span>溫度下降，高溫突發災害事件<b style="font-weight:500">解除</b></div>
-            <div class="ht-ev-card"><span class="ht-dot ht-dot-recover"></span>各部會進行<b style="font-weight:500">檢討</b>，納入調適對策與方針</div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-recover"></span>氣溫下降，連日 <b style="font-weight:500">40°C 預警解除</b></div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-recover"></span>比對實際成災區域與地方氣候<b style="font-weight:500">調適計畫風險區</b>落差</div>
+            <div class="ht-ev-card"><span class="ht-dot ht-dot-recover"></span>檢視調適措施<b style="font-weight:500">執行成效</b>，評估精進方向</div>
           </div>
         </div>
       </div>
