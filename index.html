@@ -1774,6 +1774,55 @@
     </div>
   </div>
 
+  <!-- ★ 新增卡片 Modal（僅管理模式） -->
+  <div id="addCardModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:12px; padding:28px 32px; width:min(560px,92vw); max-height:90vh; overflow-y:auto; box-shadow:0 8px 40px rgba(0,0,0,0.25); position:relative;">
+      <button onclick="closeAddCardModal()" style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:#999; line-height:1;">×</button>
+      <h3 style="margin:0 0 20px; font-size:17px; font-weight:700; color:#1a237e;">＋ 新增卡片</h3>
+
+      <div style="display:grid; gap:14px;">
+        <div>
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">階段</label>
+          <select id="acPhase" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; background:#fafafa;">
+          </select>
+        </div>
+        <div>
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">事件 / 項目名稱</label>
+          <input id="acEvent" type="text" placeholder="例：行動規劃、成果回報…" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box;">
+        </div>
+        <div>
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">負責部會</label>
+          <div style="display:flex; gap:8px;">
+            <select id="acDeptSelect" style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; background:#fafafa;" onchange="onDeptSelectChange()">
+              <option value="">— 從現有單位選擇 —</option>
+            </select>
+            <input id="acDeptCustom" type="text" placeholder="或自行輸入新單位" style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box;">
+          </div>
+        </div>
+        <div>
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">演練內容 <span style="font-weight:400; color:#aaa;">（可留空，讓單位自行填寫）</span></label>
+          <textarea id="acContent" rows="5" placeholder="請輸入演練腳本內容…" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; resize:vertical; box-sizing:border-box; font-family:inherit;"></textarea>
+        </div>
+        <div>
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">卡片類型</label>
+          <div style="display:flex; gap:10px;">
+            <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
+              <input type="radio" name="acFill" value="yellow" checked> <span style="background:#fff9c4; border:1px solid #f0c04080; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; color:#f57f17;">● 待填寫</span>
+            </label>
+            <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
+              <input type="radio" name="acFill" value="blue"> <span style="background:#e3f2fd; border:1px solid #90caf980; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; color:#1565c0;">固定腳本</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:22px; display:flex; gap:10px; justify-content:flex-end;">
+        <button onclick="closeAddCardModal()" style="padding:9px 20px; border:1px solid #ddd; border-radius:6px; background:#f5f5f5; font-size:14px; cursor:pointer;">取消</button>
+        <button onclick="submitAddCard()" style="padding:9px 24px; border:none; border-radius:6px; background:linear-gradient(135deg,#1b5e20,#2e7d32); color:#fff; font-size:14px; font-weight:600; cursor:pointer;">新增卡片</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const DATA = {
       "phases": [
@@ -4306,6 +4355,7 @@
 
     function initDeptFilter() {
       const container = document.getElementById('deptChips');
+      container.innerHTML = '';
       const depts = [...new Set(DATA.entries.filter(e => e.dept && e.dept !== '司儀').map(e => e.dept))].sort();
 
       const allChip = document.createElement('div');
@@ -4728,6 +4778,13 @@
         html += `</div>`;
       });
 
+      // Admin 模式：底部加「新增卡片」按鈕（phase 1/7/9 除外）
+      if (isAdmin && !noEditPhases.includes(activePhase)) {
+        html += `<div style="text-align:center; padding:16px 0 8px;">
+          <button onclick="openAddCardModal()" style="padding:10px 28px; border:2px dashed #90caf9; border-radius:8px; background:transparent; color:#1565c0; font-size:14px; font-weight:600; cursor:pointer; transition:all .2s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='transparent'">＋ 新增卡片</button>
+        </div>`;
+      }
+
       container.innerHTML = html;
       updateStats();
       bindSortable();
@@ -4777,6 +4834,126 @@
       render();
       scheduleStructuralUpload(true);
     }
+
+    /* ─── 新增卡片 Modal ─── */
+    function openAddCardModal() {
+      // 填入階段選單
+      const phaseSelect = document.getElementById('acPhase');
+      phaseSelect.innerHTML = '';
+      [2,3,4,5,6,7,8].forEach(p => {
+        const label = PHASE_LABELS[p] ? PHASE_LABELS[p].short : ('階段' + p);
+        const opt = document.createElement('option');
+        opt.value = p;
+        opt.textContent = label;
+        if (p === activePhase) opt.selected = true;
+        phaseSelect.appendChild(opt);
+      });
+
+      // 填入部會下拉（從現有 DATA 撈，排除司儀與主推官）
+      const deptSelect = document.getElementById('acDeptSelect');
+      deptSelect.innerHTML = '<option value="">— 從現有單位選擇 —</option>';
+      const existingDepts = [...new Set(
+        DATA.entries
+          .filter(e => e.dept && e.dept !== '司儀' && !e.dept.includes('主推官'))
+          .map(e => e.dept)
+      )].sort();
+      existingDepts.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = d;
+        deptSelect.appendChild(opt);
+      });
+
+      // 清空其他欄位
+      document.getElementById('acEvent').value = '';
+      document.getElementById('acDeptCustom').value = '';
+      document.getElementById('acContent').value = '';
+      document.querySelector('input[name="acFill"][value="yellow"]').checked = true;
+
+      const modal = document.getElementById('addCardModal');
+      modal.style.display = 'flex';
+    }
+
+    function closeAddCardModal() {
+      document.getElementById('addCardModal').style.display = 'none';
+    }
+
+    function onDeptSelectChange() {
+      const val = document.getElementById('acDeptSelect').value;
+      if (val) document.getElementById('acDeptCustom').value = '';
+    }
+
+    function submitAddCard() {
+      const phase    = parseInt(document.getElementById('acPhase').value);
+      const event    = document.getElementById('acEvent').value.trim();
+      const deptSel  = document.getElementById('acDeptSelect').value;
+      const deptCust = document.getElementById('acDeptCustom').value.trim();
+      const dept     = deptCust || deptSel;
+      const content  = document.getElementById('acContent').value.trim();
+      const fillVal  = document.querySelector('input[name="acFill"]:checked').value;
+      const editable = fillVal === 'yellow';
+
+      if (!event) { alert('請填寫事件 / 項目名稱'); return; }
+      if (!dept)  { alert('請選擇或輸入負責部會'); return; }
+
+      // 產生唯一 row ID（從 10000 起，避免與既有 row 碰撞）
+      const newRow = 10000 + Math.floor(Date.now() % 9000000);
+
+      const newEntry = {
+        row:      newRow,
+        phase:    phase,
+        id:       'custom-' + newRow,
+        event:    event,
+        dept:     dept,
+        content:  content,
+        editable: editable,
+        fill:     fillVal,
+        isIntro:  false,
+        order:    0,
+        deleted:  false,
+        isCustom: true
+      };
+
+      // 1. 注入本地 DATA
+      DATA.entries.push(newEntry);
+
+      // 2. 立即同步到 GAS（appendRow）
+      const phaseLabel = PHASE_LABELS[phase] ? PHASE_LABELS[phase].short : String(phase);
+      fetch(SCRIPT_URL, {
+        method:  'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'saveContent',
+          items: [{
+            row:     newRow,
+            phase:   phaseLabel,
+            event:   event,
+            dept:    dept,
+            content: content,
+            order:   0,
+            deleted: false
+          }]
+        })
+      })
+      .then(r => r.json())
+      .then(res => {
+        if (res.status !== 'success') console.warn('新增卡片同步失敗', res);
+      })
+      .catch(err => console.warn('新增卡片網路錯誤', err));
+
+      // 3. 更新篩選 chips（新部會需要出現在 filter）
+      initDeptFilter();
+
+      // 4. 關閉 Modal，切換到對應階段並重繪
+      closeAddCardModal();
+      if (phase !== activePhase) switchPhase(phase);
+      else render();
+    }
+
+    // 點擊 Modal 背景關閉
+    document.getElementById('addCardModal').addEventListener('click', function(e) {
+      if (e.target === this) closeAddCardModal();
+    });
 
     function onEdit(textarea) {
       const row = parseInt(textarea.dataset.row);
@@ -5071,6 +5248,33 @@
                 // 如果雲端資料已經和本地存檔不同，清除本地與其衝突的暫存，避免標籤錯亂
                 if (target.editable && typeof item.content === 'string' && edits[item.row] !== undefined && edits[item.row] !== item.content) {
                   delete edits[item.row];
+                  hasUpdate = true;
+                }
+              } else if (item.phase && item.dept) {
+                // ★ 雲端有、本地沒有 → 這是管理員新增的自訂卡片，動態注入
+                const phaseNum = parseInt(item.phase) || item.phase;
+                // 嘗試將「短名稱」（如「階段二」）對應回數字
+                let phaseInt = typeof phaseNum === 'number' ? phaseNum : null;
+                if (!phaseInt) {
+                  for (const [k, v] of Object.entries(PHASE_LABELS)) {
+                    if (v.short === item.phase) { phaseInt = parseInt(k); break; }
+                  }
+                }
+                if (phaseInt) {
+                  DATA.entries.push({
+                    row:      item.row,
+                    phase:    phaseInt,
+                    id:       'custom-' + item.row,
+                    event:    item.event  || '自訂項目',
+                    dept:     item.dept,
+                    content:  item.content || '',
+                    editable: true,
+                    fill:     'yellow',
+                    isIntro:  false,
+                    order:    typeof item.order === 'number' ? item.order : 0,
+                    deleted:  item.deleted || false,
+                    isCustom: true
+                  });
                   hasUpdate = true;
                 }
               }
