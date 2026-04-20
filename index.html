@@ -4854,12 +4854,12 @@
         phaseSelect.appendChild(opt);
       });
 
-      // 填入部會下拉（從現有 DATA 撈，排除司儀與主推官）
+      // 填入部會下拉（從現有 DATA 撈，排除司儀）
       const deptSelect = document.getElementById('acDeptSelect');
       deptSelect.innerHTML = '<option value="">— 從現有單位選擇 —</option>';
       const existingDepts = [...new Set(
         DATA.entries
-          .filter(e => e.dept && e.dept !== '司儀' && !e.dept.includes('主推官'))
+          .filter(e => e.dept && e.dept !== '司儀')
           .map(e => e.dept)
       )].sort();
       existingDepts.forEach(d => {
@@ -4987,6 +4987,7 @@
         ind._t = setTimeout(() => ind.style.display = 'none', 1500);
       }
       updateStats();
+      scheduleIdleReminder();
     }
 
     function resetCard(row) {
@@ -5003,7 +5004,81 @@
       const edited = DATA.entries.filter(e => e.editable && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
       const el = document.getElementById('stats');
       if (el) el.textContent = '已修改 ' + edited + ' / ' + total + ' 項';
+      updatePendingBadge();
     }
+
+    /* ─── A+B：未送出防呆（beforeunload + 浮動徽章 + 閒置提醒） ─── */
+    function countPending() {
+      const edited = DATA.entries.filter(e => e.editable && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
+      const reset  = DATA.entries.filter(e => e.editable && resets.has(e.row)).length;
+      return edited + reset;
+    }
+
+    function updatePendingBadge(successMode) {
+      let b = document.getElementById('pendingBadge');
+      if (!b) {
+        b = document.createElement('div');
+        b.id = 'pendingBadge';
+        b.style.cssText = 'position:fixed;top:14px;right:14px;padding:8px 14px;border-radius:18px;font-size:13px;font-weight:600;box-shadow:0 2px 8px rgba(0,0,0,.2);z-index:9999;cursor:pointer;display:none;transition:background .3s;color:#fff;';
+        b.onclick = () => {
+          const btn = document.querySelector('.btn-submit');
+          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        };
+        document.body.appendChild(b);
+      }
+      if (successMode) {
+        b.style.background = '#16a34a';
+        b.textContent = '✅ 已送出雲端';
+        b.style.display = 'block';
+        clearTimeout(b._t);
+        b._t = setTimeout(() => { b.style.display = 'none'; }, 3000);
+        return;
+      }
+      const n = countPending();
+      if (n > 0) {
+        b.style.background = '#dc2626';
+        b.textContent = '⚠️ 有 ' + n + ' 項未送出（點此前往送出）';
+        b.style.display = 'block';
+      } else {
+        b.style.display = 'none';
+      }
+    }
+
+    let idleReminderTimer = null;
+    function scheduleIdleReminder() {
+      if (idleReminderTimer) clearTimeout(idleReminderTimer);
+      idleReminderTimer = setTimeout(() => {
+        const n = countPending();
+        if (n > 0) showIdleToast('⚠️ 您有 ' + n + ' 項修改尚未送出，記得點「送出」同步到雲端');
+      }, 180000); // 3 分鐘
+    }
+
+    function showIdleToast(msg) {
+      let t = document.getElementById('idleToast');
+      if (!t) {
+        t = document.createElement('div');
+        t.id = 'idleToast';
+        t.style.cssText = 'position:fixed;bottom:80px;right:20px;background:#f59e0b;color:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.25);z-index:9999;font-size:14px;transition:opacity .3s;cursor:pointer;max-width:300px;';
+        t.onclick = () => { t.style.opacity = '0'; setTimeout(() => t.style.display = 'none', 300); };
+        document.body.appendChild(t);
+      }
+      t.textContent = msg;
+      t.style.display = 'block';
+      t.style.opacity = '1';
+      clearTimeout(t._t);
+      t._t = setTimeout(() => {
+        t.style.opacity = '0';
+        setTimeout(() => t.style.display = 'none', 300);
+      }, 8000);
+    }
+
+    window.addEventListener('beforeunload', function(e) {
+      if (countPending() > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+      }
+    });
 
     function handleSubmit() {
       // 1. 類型A：使用者有修改且與雲端值不同的項目
@@ -5084,6 +5159,8 @@
             });
             persistEdits();
             resets.clear();
+            updatePendingBadge(true);
+            if (idleReminderTimer) { clearTimeout(idleReminderTimer); idleReminderTimer = null; }
             syncStatus.innerHTML = '✅ 雲端上傳成功！';
             syncStatus.style.background = 'rgba(27, 94, 32, 0.85)';
           } else {
