@@ -4761,15 +4761,16 @@
         html += `</span>`;
         html += `</div>`;
 
+        const canEdit = e.editable || isAdmin;
         html += `<div class="card-body ${bgClass}">`;
-        if (e.editable) {
+        if (canEdit) {
           html += `<textarea class="edit-area" data-row="${e.row}" oninput="onEdit(this)">${escHtml(currentContent)}</textarea>`;
         } else {
           html += `<div class="content-text">${e.content ? escHtml(currentContent) : '<span style="color:#aaa;font-style:italic;">（尚無內容）</span>'}</div>`;
         }
         html += `</div>`;
 
-        if (e.editable) {
+        if (canEdit) {
           html += `<div class="card-footer">
         <span class="saved-indicator" id="saved-${e.row}">✓ 已自動儲存</span>
         <button class="btn btn-reset" onclick="resetCard(${e.row})">還原</button>
@@ -5001,8 +5002,9 @@
     }
 
     function updateStats() {
-      const total = DATA.entries.filter(e => e.editable).length;
-      const edited = DATA.entries.filter(e => e.editable && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
+      // Admin 模式：固定卡片也納入可編輯範圍統計
+      const total = DATA.entries.filter(e => e.editable || isAdmin).length;
+      const edited = DATA.entries.filter(e => (e.editable || isAdmin) && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
       const el = document.getElementById('stats');
       if (el) el.textContent = '已修改 ' + edited + ' / ' + total + ' 項';
       updatePendingBadge();
@@ -5010,8 +5012,8 @@
 
     /* ─── A+B：未送出防呆（beforeunload + 浮動徽章 + 閒置提醒） ─── */
     function countPending() {
-      const edited = DATA.entries.filter(e => e.editable && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
-      const reset  = DATA.entries.filter(e => e.editable && resets.has(e.row)).length;
+      const edited = DATA.entries.filter(e => (e.editable || isAdmin) && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
+      const reset  = DATA.entries.filter(e => (e.editable || isAdmin) && resets.has(e.row)).length;
       return edited + reset;
     }
 
@@ -5082,9 +5084,9 @@
     });
 
     function handleSubmit() {
-      // 1. 類型A：使用者有修改且與雲端值不同的項目
+      // 1. 類型A：使用者有修改且與雲端值不同的項目（admin 可改固定卡片）
       const editedItems = DATA.entries.filter(e =>
-        e.editable &&
+        (e.editable || isAdmin) &&
         edits[e.row] !== undefined &&
         edits[e.row] !== e.content
       ).map(e => ({
@@ -5097,7 +5099,7 @@
 
       // 2. 類型B：使用者明確按過「還原」的項目，送回初始預設值
       const resetItems = DATA.entries.filter(e =>
-        e.editable && resets.has(e.row)
+        (e.editable || isAdmin) && resets.has(e.row)
       ).map(e => ({
         row: e.row,
         phase: PHASE_LABELS[e.phase] ? PHASE_LABELS[e.phase].short : e.phase,
@@ -5312,10 +5314,14 @@
             serverData.forEach(item => {
               const target = DATA.entries.find(e => e.row === item.row);
               if (target) {
-                // ⚠️ 只有「可編輯」卡片的內容才從雲端覆蓋；
-                // 固定腳本（editable:false，如主推官台詞）永遠以 index.html 為準，
-                // 避免雲端空欄位洗掉本地預設內容。
-                if (target.editable && typeof item.content === 'string' && target.content !== item.content) {
+                // 可編輯卡片：雲端內容永遠覆蓋本地（即使是空字串，代表使用者清空）
+                // 固定卡片：僅當雲端有非空內容時才覆蓋（admin 編輯過的固定腳本）；
+                //          空字串保留 index.html 預設值，避免洗掉未被編輯的固定腳本
+                const cloudHasContent = typeof item.content === 'string' && item.content !== '';
+                const shouldOverride = target.editable
+                  ? typeof item.content === 'string'
+                  : cloudHasContent;
+                if (shouldOverride && target.content !== item.content) {
                   target.content = item.content;
                   hasUpdate = true;
                 }
@@ -5329,7 +5335,7 @@
                   hasUpdate = true;
                 }
                 // 如果雲端資料已經和本地存檔不同，清除本地與其衝突的暫存，避免標籤錯亂
-                if (target.editable && typeof item.content === 'string' && edits[item.row] !== undefined && edits[item.row] !== item.content) {
+                if (shouldOverride && edits[item.row] !== undefined && edits[item.row] !== item.content) {
                   delete edits[item.row];
                   hasUpdate = true;
                 }
