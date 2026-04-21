@@ -4936,7 +4936,8 @@
             dept:    dept,
             content: content,
             order:   0,
-            deleted: false
+            deleted: false,
+            fill:    fillVal
           }]
         })
       })
@@ -5343,6 +5344,7 @@
                   }
                 }
                 if (phaseInt) {
+                  const fillVal = (item.fill === 'blue' || item.fill === 'green') ? item.fill : 'yellow';
                   DATA.entries.push({
                     row:      item.row,
                     phase:    phaseInt,
@@ -5350,8 +5352,8 @@
                     event:    item.event  || '自訂項目',
                     dept:     item.dept,
                     content:  item.content || '',
-                    editable: true,
-                    fill:     'yellow',
+                    editable: fillVal === 'yellow',
+                    fill:     fillVal,
                     isIntro:  false,
                     order:    typeof item.order === 'number' ? item.order : 0,
                     deleted:  item.deleted || false,
