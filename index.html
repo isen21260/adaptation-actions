@@ -1522,7 +1522,7 @@
     }
 
     /* ═══════════════════════════════
-       ADMIN MODE (?admin=1)
+       ADMIN MODE (?admin=5)
     ═══════════════════════════════ */
     .admin-banner {
       display: none;
@@ -4260,7 +4260,7 @@
     let edits = {};
     let resets = new Set();
     let selectedDepts = new Set();
-    let isAdmin = new URLSearchParams(location.search).get('admin') === '1';
+    let isAdmin = new URLSearchParams(location.search).get('admin') === '5';
     let showDeleted = false;
     let sortableInstance = null;
     let structUploadTimer = null;
