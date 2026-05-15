@@ -1775,50 +1775,66 @@
   </div>
 
   <!-- ★ 新增卡片 Modal（僅管理模式） -->
-  <div id="addCardModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
-    <div style="background:#fff; border-radius:12px; padding:28px 32px; width:min(560px,92vw); max-height:90vh; overflow-y:auto; box-shadow:0 8px 40px rgba(0,0,0,0.25); position:relative;">
-      <button onclick="closeAddCardModal()" style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:#999; line-height:1;">×</button>
+  <div id="addCardModal"
+    style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; align-items:center; justify-content:center;">
+    <div
+      style="background:#fff; border-radius:12px; padding:28px 32px; width:min(560px,92vw); max-height:90vh; overflow-y:auto; box-shadow:0 8px 40px rgba(0,0,0,0.25); position:relative;">
+      <button onclick="closeAddCardModal()"
+        style="position:absolute; top:14px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:#999; line-height:1;">×</button>
       <h3 style="margin:0 0 20px; font-size:17px; font-weight:700; color:#1a237e;">＋ 新增卡片</h3>
 
       <div style="display:grid; gap:14px;">
         <div>
           <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">階段</label>
-          <select id="acPhase" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; background:#fafafa;">
+          <select id="acPhase"
+            style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; background:#fafafa;">
           </select>
         </div>
         <div>
-          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">事件 / 項目名稱</label>
-          <input id="acEvent" type="text" placeholder="例：行動規劃、成果回報…" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box;">
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">事件 /
+            項目名稱</label>
+          <input id="acEvent" type="text" placeholder="例：行動規劃、成果回報…"
+            style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box;">
         </div>
         <div>
           <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">負責部會</label>
           <div style="display:flex; gap:8px;">
-            <select id="acDeptSelect" style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; background:#fafafa;" onchange="onDeptSelectChange()">
+            <select id="acDeptSelect"
+              style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; background:#fafafa;"
+              onchange="onDeptSelectChange()">
               <option value="">— 從現有單位選擇 —</option>
             </select>
-            <input id="acDeptCustom" type="text" placeholder="或自行輸入新單位" style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box;">
+            <input id="acDeptCustom" type="text" placeholder="或自行輸入新單位"
+              style="flex:1; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; box-sizing:border-box;">
           </div>
         </div>
         <div>
-          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">演練內容 <span style="font-weight:400; color:#aaa;">（可留空，讓單位自行填寫）</span></label>
-          <textarea id="acContent" rows="5" placeholder="請輸入演練腳本內容…" style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; resize:vertical; box-sizing:border-box; font-family:inherit;"></textarea>
+          <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">演練內容 <span
+              style="font-weight:400; color:#aaa;">（可留空，讓單位自行填寫）</span></label>
+          <textarea id="acContent" rows="5" placeholder="請輸入演練腳本內容…"
+            style="width:100%; padding:8px 10px; border:1px solid #ddd; border-radius:6px; font-size:14px; resize:vertical; box-sizing:border-box; font-family:inherit;"></textarea>
         </div>
         <div>
           <label style="font-size:13px; font-weight:600; color:#555; display:block; margin-bottom:5px;">卡片類型</label>
           <div style="display:flex; gap:10px;">
             <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
-              <input type="radio" name="acFill" value="yellow" checked> <span style="background:#fff9c4; border:1px solid #f0c04080; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; color:#f57f17;">● 待填寫</span>
+              <input type="radio" name="acFill" value="yellow" checked> <span
+                style="background:#fff9c4; border:1px solid #f0c04080; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; color:#f57f17;">●
+                待填寫</span>
             </label>
             <label style="display:flex; align-items:center; gap:5px; font-size:14px; cursor:pointer;">
-              <input type="radio" name="acFill" value="blue"> <span style="background:#e3f2fd; border:1px solid #90caf980; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; color:#1565c0;">固定腳本</span>
+              <input type="radio" name="acFill" value="blue"> <span
+                style="background:#e3f2fd; border:1px solid #90caf980; padding:2px 10px; border-radius:10px; font-size:12px; font-weight:600; color:#1565c0;">固定腳本</span>
             </label>
           </div>
         </div>
       </div>
 
       <div style="margin-top:22px; display:flex; gap:10px; justify-content:flex-end;">
-        <button onclick="closeAddCardModal()" style="padding:9px 20px; border:1px solid #ddd; border-radius:6px; background:#f5f5f5; font-size:14px; cursor:pointer;">取消</button>
-        <button onclick="submitAddCard()" style="padding:9px 24px; border:none; border-radius:6px; background:linear-gradient(135deg,#1b5e20,#2e7d32); color:#fff; font-size:14px; font-weight:600; cursor:pointer;">新增卡片</button>
+        <button onclick="closeAddCardModal()"
+          style="padding:9px 20px; border:1px solid #ddd; border-radius:6px; background:#f5f5f5; font-size:14px; cursor:pointer;">取消</button>
+        <button onclick="submitAddCard()"
+          style="padding:9px 24px; border:none; border-radius:6px; background:linear-gradient(135deg,#1b5e20,#2e7d32); color:#fff; font-size:14px; font-weight:600; cursor:pointer;">新增卡片</button>
       </div>
     </div>
   </div>
@@ -2897,7 +2913,7 @@
           "id": "4.1",
           "event": "演練情境說明",
           "dept": "司儀",
-          "content": "演練階段四、40℃高溫損害累積DAY1\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區開始出現災害事件：\n\n1.北捷文湖線行經內湖區路段(西湖站至東湖站)因軌溫出現60°C停駛。\n\n2.北北桃之戶外工作者(營造業工人、外送員、軍警消人員)及慢性病患者發生熱衰竭、熱中暑，50人以上熱傷害急診病患送醫。\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
+          "content": "演練階段四、40℃高溫損害累積DAY1\n調適行動會議結束後，各部會開始執行應對40℃高溫之行動措施，在執行的過程中，台北市、新北市、桃園市部分地區開始出現災害事件：\n\n1.北捷淡水線道碴段（復興崗站至淡水站上下行軌道）鋼軌溫度超過60°C，行控中心啟動應變機制，列車限速運轉。\n\n2.北北桃之戶外工作者(營造業工人、外送員、軍警消人員)及慢性病患者發生熱衰竭、熱中暑，50人以上熱傷害急診病患送醫。\n\n各部會將回報此情況，並針對各事件採取更為積極的應對行動。",
           "editable": false,
           "fill": "blue",
           "isIntro": true
@@ -3744,7 +3760,7 @@
           "id": "6.2",
           "event": "召開會議",
           "dept": "主推官",
-          "content": "本次連續3日之高溫40℃事件，造成台北市、新北市、桃園市皆有發生高溫危害事件，統整如下：\n\nDay0\n1.台北市內湖區發生饋線事故，影響上千戶住宅，三總啟動備載電力。\n2.北北桃之敏感脆弱族群(年幼及年長者)發生熱衰竭、熱中暑，尤以測站飆破40度的區域為多，60人以上熱傷害急診病患送醫，有中重症。\n3.晚間因高溫持續，用電量持續增加，造成部分地區限電，導致加壓站停擺，進而引發停水。\n\nDay1\n1.北捷文湖線行經內湖區路段(西湖站至東湖站)因軌溫出現60°C停駛。\n2.北北桃之戶外工作者(營造業工人、外送員、軍警消人員)及慢性病患者發生熱衰竭、熱中暑，50人以上熱傷害急診病患送醫。\n\nDay2\n1.因連日高溫，導致新北市晚間零星區域出現堆置垃圾悶燒情形。\n2.五股區、內湖區、蘆竹區工業區部分路段柏油有軟化現象發生，數輛大卡車駛過後造成路面變形。\n\n請各部會針對此次事件調適行動措施不足或可改善之處進行報告，並說明後續針對各項事件之調適作為。",
+          "content": "本次連續3日之高溫40℃事件，造成台北市、新北市、桃園市皆有發生高溫危害事件，統整如下：\n\nDay0\n1.台北市內湖區發生饋線事故，影響上千戶住宅北捷文湖線行經內湖區，三總啟動備載電力。\n2.北北桃之敏感脆弱族群(年幼及年長者)發生熱衰竭、熱中暑，尤以測站飆破40度的區域為多，60人以上熱傷害急診病患送醫，有中重症。\n3.晚間因高溫持續，用電量持續增加，造成部分地區限電，導致加壓站停擺，進而引發停水。\n\nDay1\n1.路段(西湖站至東湖站)因軌溫出現60°C停駛。\n2.北北桃之戶外工作者(營造業工人、外送員、軍警消人員)及慢性病患者發生熱衰竭、熱中暑，50人以上熱傷害急診病患送醫。\n\nDay2\n1.因連日高溫，導致新北市晚間零星區域出現堆置垃圾悶燒情形。\n2.五股區、內湖區、蘆竹區工業區部分路段柏油有軟化現象發生，數輛大卡車駛過後造成路面變形。\n\n請各部會針對此次事件調適行動措施不足或可改善之處進行報告，並說明後續針對各項事件之調適作為。",
           "editable": false,
           "fill": "blue",
           "isIntro": false
@@ -4846,7 +4862,7 @@
       // 填入階段選單
       const phaseSelect = document.getElementById('acPhase');
       phaseSelect.innerHTML = '';
-      [2,3,4,5,6,7,8].forEach(p => {
+      [2, 3, 4, 5, 6, 7, 8].forEach(p => {
         const label = PHASE_LABELS[p] ? PHASE_LABELS[p].short : ('階段' + p);
         const opt = document.createElement('option');
         opt.value = p;
@@ -4890,33 +4906,33 @@
     }
 
     function submitAddCard() {
-      const phase    = parseInt(document.getElementById('acPhase').value);
-      const event    = document.getElementById('acEvent').value.trim();
-      const deptSel  = document.getElementById('acDeptSelect').value;
+      const phase = parseInt(document.getElementById('acPhase').value);
+      const event = document.getElementById('acEvent').value.trim();
+      const deptSel = document.getElementById('acDeptSelect').value;
       const deptCust = document.getElementById('acDeptCustom').value.trim();
-      const dept     = deptCust || deptSel;
-      const content  = document.getElementById('acContent').value.trim();
-      const fillVal  = document.querySelector('input[name="acFill"]:checked').value;
+      const dept = deptCust || deptSel;
+      const content = document.getElementById('acContent').value.trim();
+      const fillVal = document.querySelector('input[name="acFill"]:checked').value;
       const editable = fillVal === 'yellow';
 
       if (!event) { alert('請填寫事件 / 項目名稱'); return; }
-      if (!dept)  { alert('請選擇或輸入負責部會'); return; }
+      if (!dept) { alert('請選擇或輸入負責部會'); return; }
 
       // 產生唯一 row ID（從 10000 起，避免與既有 row 碰撞）
       const newRow = 10000 + Math.floor(Date.now() % 9000000);
 
       const newEntry = {
-        row:      newRow,
-        phase:    phase,
-        id:       'custom-' + newRow,
-        event:    event,
-        dept:     dept,
-        content:  content,
+        row: newRow,
+        phase: phase,
+        id: 'custom-' + newRow,
+        event: event,
+        dept: dept,
+        content: content,
         editable: editable,
-        fill:     fillVal,
-        isIntro:  false,
-        order:    0,
-        deleted:  false,
+        fill: fillVal,
+        isIntro: false,
+        order: 0,
+        deleted: false,
         isCustom: true
       };
 
@@ -4926,27 +4942,27 @@
       // 2. 立即同步到 GAS（appendRow）
       const phaseLabel = PHASE_LABELS[phase] ? PHASE_LABELS[phase].short : String(phase);
       fetch(SCRIPT_URL, {
-        method:  'POST',
+        method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           action: 'saveContent',
           items: [{
-            row:     newRow,
-            phase:   phaseLabel,
-            event:   event,
-            dept:    dept,
+            row: newRow,
+            phase: phaseLabel,
+            event: event,
+            dept: dept,
             content: content,
-            order:   0,
+            order: 0,
             deleted: false,
-            fill:    fillVal
+            fill: fillVal
           }]
         })
       })
-      .then(r => r.json())
-      .then(res => {
-        if (res.status !== 'success') console.warn('新增卡片同步失敗', res);
-      })
-      .catch(err => console.warn('新增卡片網路錯誤', err));
+        .then(r => r.json())
+        .then(res => {
+          if (res.status !== 'success') console.warn('新增卡片同步失敗', res);
+        })
+        .catch(err => console.warn('新增卡片網路錯誤', err));
 
       // 3. 更新篩選 chips（新部會需要出現在 filter）
       initDeptFilter();
@@ -4958,7 +4974,7 @@
     }
 
     // 點擊 Modal 背景關閉
-    document.getElementById('addCardModal').addEventListener('click', function(e) {
+    document.getElementById('addCardModal').addEventListener('click', function (e) {
       if (e.target === this) closeAddCardModal();
     });
 
@@ -5013,7 +5029,7 @@
     /* ─── A+B：未送出防呆（beforeunload + 浮動徽章 + 閒置提醒） ─── */
     function countPending() {
       const edited = DATA.entries.filter(e => (e.editable || isAdmin) && edits[e.row] !== undefined && edits[e.row] !== e.content).length;
-      const reset  = DATA.entries.filter(e => (e.editable || isAdmin) && resets.has(e.row)).length;
+      const reset = DATA.entries.filter(e => (e.editable || isAdmin) && resets.has(e.row)).length;
       return edited + reset;
     }
 
@@ -5075,7 +5091,7 @@
       }, 8000);
     }
 
-    window.addEventListener('beforeunload', function(e) {
+    window.addEventListener('beforeunload', function (e) {
       if (countPending() > 0) {
         e.preventDefault();
         e.returnValue = '';
@@ -5352,17 +5368,17 @@
                 if (phaseInt) {
                   const fillVal = (item.fill === 'blue' || item.fill === 'green') ? item.fill : 'yellow';
                   DATA.entries.push({
-                    row:      item.row,
-                    phase:    phaseInt,
-                    id:       'custom-' + item.row,
-                    event:    item.event  || '自訂項目',
-                    dept:     item.dept,
-                    content:  item.content || '',
+                    row: item.row,
+                    phase: phaseInt,
+                    id: 'custom-' + item.row,
+                    event: item.event || '自訂項目',
+                    dept: item.dept,
+                    content: item.content || '',
                     editable: fillVal === 'yellow',
-                    fill:     fillVal,
-                    isIntro:  false,
-                    order:    typeof item.order === 'number' ? item.order : 0,
-                    deleted:  item.deleted || false,
+                    fill: fillVal,
+                    isIntro: false,
+                    order: typeof item.order === 'number' ? item.order : 0,
+                    deleted: item.deleted || false,
                     isCustom: true
                   });
                   hasUpdate = true;
