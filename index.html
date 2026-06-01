@@ -5520,6 +5520,7 @@
             });
             if (hasUpdate) {
               persistEdits(); // 更新暫存
+              initDeptFilter(); // 雲端可能注入新部會的自訂卡片，需重建篩選標籤列
               render(); // 資料變更後重新渲染（依當前頁面正確選擇渲染方式）
             }
           } else {
