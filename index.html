@@ -4381,7 +4381,13 @@
     function initDeptFilter() {
       const container = document.getElementById('deptChips');
       container.innerHTML = '';
-      const depts = [...new Set(DATA.entries.filter(e => e.dept && e.dept !== '司儀').map(e => e.dept))].sort();
+      // 排除「整個部會的卡片都已刪除」的標籤（admin 開啟「顯示已刪除」時仍保留）
+      const depts = [...new Set(
+        DATA.entries
+          .filter(e => e.dept && e.dept !== '司儀')
+          .filter(e => (isAdmin && showDeleted) ? true : !e.deleted)
+          .map(e => e.dept)
+      )].sort();
 
       const allChip = document.createElement('div');
       allChip.className = 'dept-chip active';
@@ -4396,7 +4402,7 @@
       depts.forEach(d => {
         const chip = document.createElement('div');
         chip.className = 'dept-chip';
-        chip.textContent = d;
+        chip.dataset.dept = d;
         chip.onclick = () => {
           if (selectedDepts.has(d)) {
             selectedDepts.delete(d);
@@ -4406,16 +4412,47 @@
           renderChips();
           renderCards();
         };
+
+        const label = document.createElement('span');
+        label.textContent = d;
+        chip.appendChild(label);
+
+        // 管理模式：標籤上加「×」可刪除該部會及其所有卡片
+        if (isAdmin) {
+          const delBtn = document.createElement('span');
+          delBtn.textContent = '×';
+          delBtn.title = '刪除此部會及其所有卡片';
+          delBtn.style.cssText = 'margin-left:6px; font-weight:700; opacity:0.55; cursor:pointer;';
+          delBtn.onmouseover = () => { delBtn.style.opacity = '1'; delBtn.style.color = '#dc2626'; };
+          delBtn.onmouseout = () => { delBtn.style.opacity = '0.55'; delBtn.style.color = ''; };
+          delBtn.onclick = (ev) => { ev.stopPropagation(); deleteDept(d); };
+          chip.appendChild(delBtn);
+        }
+
         container.appendChild(chip);
       });
       document.getElementById('editableOnly').onchange = renderCards;
+      renderChips();   // 重建後同步「已選取」高亮狀態
+    }
+
+    /* ─── 管理模式：刪除整個部會標籤（連同其所有卡片，跨所有階段） ─── */
+    function deleteDept(dept) {
+      if (!isAdmin) return;
+      const affected = DATA.entries.filter(e => e.dept === dept && !e.deleted);
+      if (affected.length === 0) return;
+      if (!confirm('確定要刪除「' + dept + '」這個部會標籤嗎？\n將一併刪除其所有卡片（共 ' + affected.length + ' 張，可於「顯示已刪除」中還原）。')) return;
+      affected.forEach(e => e.deleted = true);
+      selectedDepts.delete(dept);
+      initDeptFilter();
+      render();
+      scheduleStructuralUpload(true);
     }
 
     function renderChips() {
       const chips = document.getElementById('deptChips').children;
       chips[0].classList.toggle('active', selectedDepts.size === 0);
       for (let i = 1; i < chips.length; i++) {
-        chips[i].classList.toggle('active', selectedDepts.has(chips[i].textContent));
+        chips[i].classList.toggle('active', selectedDepts.has(chips[i].dataset.dept));
       }
     }
 
@@ -5319,6 +5356,7 @@
           showDeleted = !showDeleted;
           toggleBtn.classList.toggle('active', showDeleted);
           toggleBtn.textContent = showDeleted ? '✓ 顯示已刪除' : '顯示已刪除';
+          initDeptFilter();   // 同步刷新部會標籤（顯示/隱藏整組已刪除的部會）
           render();
         };
       }
