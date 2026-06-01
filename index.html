@@ -1741,9 +1741,16 @@
           <span style="font-size:12px;opacity:0.85;">可拖拉卡片調整順序、刪除不需要的區塊</span>
         </div>
         <div class="ab-actions">
+          <button id="toggleEditLock">🔒 鎖定填寫</button>
           <button id="toggleShowDeleted">顯示已刪除</button>
           <button id="adminExit">離開管理模式</button>
         </div>
+      </div>
+
+      <!-- 鎖定提示橫幅（所有人可見，鎖定時顯示） -->
+      <div id="lockNotice" style="display:none; align-items:center; gap:10px; background:linear-gradient(135deg,#7f1d1d,#b91c1c); color:#fff; padding:12px 18px; border-radius:10px; margin:0 0 16px; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);">
+        <span style="font-size:18px;">🔒</span>
+        <span>腳本填寫已由管理員鎖定，目前僅供檢視，無法編輯或送出。</span>
       </div>
 
       <div id="structSyncBadge">🔄 結構同步中...</div>
@@ -4280,6 +4287,8 @@
     let showDeleted = false;
     let sortableInstance = null;
     let structUploadTimer = null;
+    let editLocked = false;        // 全域鎖定狀態（由雲端取得，所有人一致）
+    let lockPollTimer = null;
     try { edits = JSON.parse(localStorage.getItem('heatDrillEdits3') || '{}'); } catch (e) { }
     function persistEdits() { localStorage.setItem('heatDrillEdits3', JSON.stringify(edits)); }
 
@@ -4319,7 +4328,7 @@
       fetch(SCRIPT_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ action: 'saveStructure', items: payload })
+        body: JSON.stringify({ action: 'saveStructure', items: payload, admin: isAdmin })
       })
         .then(res => res.json())
         .then(result => {
@@ -4710,8 +4719,10 @@
       const noEditPhases = [1, 7, 9];
       const shouldShowFilter = !noEditPhases.includes(activePhase);
 
+      // 鎖定中且非管理員：隱藏送出列（僅供檢視）
+      const canSubmit = isAdmin || !editLocked;
       document.getElementById('filterBar').style.display = shouldShowFilter ? 'flex' : 'none';
-      document.getElementById('submitBar').style.display = shouldShowFilter ? 'block' : 'none';
+      document.getElementById('submitBar').style.display = (shouldShowFilter && canSubmit) ? 'block' : 'none';
 
       const container = document.getElementById('content');
 
@@ -4777,7 +4788,8 @@
         html += `</span>`;
         html += `</div>`;
 
-        const canEdit = e.editable || isAdmin;
+        // 鎖定中：非管理員一律唯讀；管理員不受限
+        const canEdit = (e.editable || isAdmin) && (isAdmin || !editLocked);
         html += `<div class="card-body ${bgClass}">`;
         if (canEdit) {
           html += `<textarea class="edit-area" data-row="${e.row}" oninput="onEdit(this)">${escHtml(currentContent)}</textarea>`;
@@ -4946,6 +4958,7 @@
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
         body: JSON.stringify({
           action: 'saveContent',
+          admin: isAdmin,
           items: [{
             row: newRow,
             phase: phaseLabel,
@@ -4979,6 +4992,7 @@
     });
 
     function onEdit(textarea) {
+      if (editLocked && !isAdmin) return;   // 鎖定中非管理員不接受輸入
       const row = parseInt(textarea.dataset.row);
       edits[row] = textarea.value;
       persistEdits();
@@ -5009,6 +5023,7 @@
     }
 
     function resetCard(row) {
+      if (editLocked && !isAdmin) { alert('腳本填寫目前已被管理員鎖定。'); return; }
       const orig = DATA.entries.find(e => e.row === row);
       if (!orig || !confirm('確定要還原為初始內容嗎？')) return;
       delete edits[row];
@@ -5100,6 +5115,12 @@
     });
 
     function handleSubmit() {
+      // 0. 鎖定中且非管理員：禁止送出
+      if (editLocked && !isAdmin) {
+        alert('腳本填寫目前已被管理員鎖定，無法送出。');
+        return;
+      }
+
       // 1. 類型A：使用者有修改且與雲端值不同的項目（admin 可改固定卡片）
       const editedItems = DATA.entries.filter(e =>
         (e.editable || isAdmin) &&
@@ -5164,10 +5185,19 @@
         headers: {
           "Content-Type": "text/plain;charset=utf-8"
         },
-        body: JSON.stringify({ action: "saveContent", items: payload })
+        body: JSON.stringify({ action: "saveContent", items: payload, admin: isAdmin })
       })
         .then(res => res.json())
         .then(result => {
+          if (result.status === "locked") {
+            // 送出當下才發現已被鎖定 → 同步本地狀態並提示
+            editLocked = true;
+            applyLockState();
+            syncStatus.innerHTML = '🔒 已被管理員鎖定，無法送出';
+            syncStatus.style.background = 'rgba(127, 29, 29, 0.9)';
+            setTimeout(() => { syncStatus.style.opacity = '0'; }, 3000);
+            return;
+          }
           if (result.status === "success") {
             // 送出成功後：將已送出的內容更新到 e.content，並從 edits 移除
             // 確保下次 submit 不會重複帶上這些記錄
@@ -5299,6 +5329,67 @@
           location.href = url.toString();
         };
       }
+      const lockBtn = document.getElementById('toggleEditLock');
+      if (lockBtn) lockBtn.onclick = toggleEditLock;
+    }
+
+    /* ─── 全域鎖定：讀取 / 套用 / 切換 / 輪詢 ─── */
+    // 依目前 editLocked 更新畫面（提示橫幅、按鈕文字、重繪卡片）
+    function applyLockState() {
+      const notice = document.getElementById('lockNotice');
+      if (notice) notice.style.display = editLocked ? 'flex' : 'none';
+      const btn = document.getElementById('toggleEditLock');
+      if (btn) {
+        btn.textContent = editLocked ? '🔓 解除鎖定' : '🔒 鎖定填寫';
+        btn.classList.toggle('active', editLocked);
+      }
+      render();
+    }
+
+    // 向雲端取得最新鎖定狀態（初始化 + 輪詢共用）
+    function fetchLockState(initial) {
+      if (typeof SCRIPT_URL === 'undefined' || SCRIPT_URL.includes('###')) return Promise.resolve();
+      return fetch(SCRIPT_URL + '?action=getLock')
+        .then(r => r.json())
+        .then(d => {
+          if (d && typeof d.locked === 'boolean' && (initial || d.locked !== editLocked)) {
+            editLocked = d.locked;
+            applyLockState();
+          }
+        })
+        .catch(() => { });
+    }
+
+    // 管理員切換鎖定狀態
+    function toggleEditLock() {
+      if (!isAdmin) return;
+      const next = !editLocked;
+      const btn = document.getElementById('toggleEditLock');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ 處理中...'; }
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: 'setLock', locked: next, admin: isAdmin })
+      })
+        .then(r => r.json())
+        .then(res => {
+          if (res && res.status === 'success' && typeof res.locked === 'boolean') {
+            editLocked = res.locked;
+          } else {
+            alert('切換鎖定狀態失敗，請重試。');
+          }
+        })
+        .catch(() => alert('切換鎖定狀態時發生網路錯誤。'))
+        .finally(() => {
+          if (btn) btn.disabled = false;
+          applyLockState();
+        });
+    }
+
+    // 每 30 秒輪詢一次，讓已開啟頁面的使用者即時感受到鎖定變化
+    function startLockPolling() {
+      if (lockPollTimer) clearInterval(lockPollTimer);
+      lockPollTimer = setInterval(() => fetchLockState(false), 30000);
     }
 
     // ★★★ 共通之 Google Apps Script 佈署網址 ★★★
@@ -5312,6 +5403,10 @@
       initTabs();
       initDeptFilter();
       render();
+
+      // 取得全域鎖定狀態並開始輪詢（所有人皆會套用）
+      fetchLockState(true);
+      startLockPolling();
 
       // 在右上角加入一個小小的同步狀態提示
       const syncStatus = document.createElement('div');
